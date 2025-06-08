@@ -47,7 +47,7 @@ def main():
                                 logout()
                             elif(opcion == '0'):
                                 print("Gracias vuelva pronto")
-                                break
+                                return
                             
                         case 'estandar':
                             mostrar_opciones_para_estandar()
@@ -64,7 +64,7 @@ def main():
                                 logout()
                             elif(opcion == '0'):
                                 print("Gracias vuelva pronto")    
-                                break
+                                return
                 
             case _:
                 print("la opcion ingresada no es correcta")

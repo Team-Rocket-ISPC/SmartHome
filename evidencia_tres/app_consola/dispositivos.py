@@ -45,7 +45,7 @@ def buscar_dispositivo():
 
     for dispositivo in base_de_datos['dispositivos']:
         if nombre in dispositivo['nombre']:
-            print(f"id: {dispositivo['id']} ,Nombre: {dispositivo['nombre']}, Tipo: {dispositivo['tipo']}, Ubicación: {dispositivo['ubicacion']}, Estado: {dispositivo['estado']}")
+            formatear_mensaje_consola(f"id: {dispositivo['id']} ,Nombre: {dispositivo['nombre']}, Tipo: {dispositivo['tipo']}, Ubicación: {dispositivo['ubicacion']}, Estado: {dispositivo['estado']}")
             encontrado = True
             break
 
@@ -64,6 +64,5 @@ def eliminar_dispositivo():
             if dispositivo['nombre'] == nombre:
                 base_de_datos['dispositivos'].remove(dispositivo)
                 formatear_mensaje_consola(f"Dispositivo {nombre} eliminado con éxito.")
-            else:
-                formatear_mensaje_consola(f"Dispositivo {nombre} no encontrado.")
+           
 
