@@ -26,6 +26,8 @@ Crear un video de máximo 3 minutos donde todo el equipo presente la solución d
 📤 Entrega: Subir el video a una plataforma (YouTube, Drive, etc.) y enviar el enlace junto con los demás entregables.
 🎓 El video debe evidenciar el trabajo colaborativo y el dominio técnico de todos los integrantes del equipo.
 
+Link al video de presentacion: https://drive.google.com/file/d/1z16YRSw7OubeXPIpnFRZE-_a7y4ddmVb/view?usp=drive_link
+
 ----------------------------------------------------------------------------------------------------------
 Como primera DEMO, presentamos una aplicacion de consola.
 Instruciones para uso:
