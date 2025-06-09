@@ -8,7 +8,9 @@ Se trata del desarrollo de un programa capaz de gestionar dispositivos inteligen
 
 
 🎬 Demo Final - Evidencia de Aprendizaje 3
+
 Instrucciones para la Demo:
+
 Crear un video de máximo 3 minutos donde todo el equipo presente la solución desarrollada.
 
 📋 Requisitos del video:
@@ -49,6 +51,7 @@ Como primera DEMO, presentamos una aplicacion de consola.
 Instruciones para uso:
 
 📦 Requisitos
+
 ●	Python 3.8 o superior
 
 ●	Dominio de Git y Github
@@ -61,6 +64,7 @@ Instruciones para uso:
 ●	Clonar el repositorio en tu visual studio code o editor de confianza
 
 En consola usar:
+
     git clone https://github.com/Team-Rocket-ISPC/SmartHome/tree/main/evidencia_tres/app_consola
     
 ●	Posicionarse en el directorio de tu repositorio. En consola cd repositorio
@@ -69,6 +73,7 @@ En consola usar:
 ▶️ Ejecución
 
 ●	En consola usa el siguiente comando: python main.py
+
 Asegúrate de estar en el directorio del proyecto donde se encuentra el archivo principal (main.py)
 
 
