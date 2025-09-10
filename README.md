@@ -6,43 +6,6 @@ Módulo: Programador
 
 Se trata del desarrollo de un programa capaz de gestionar dispositivos inteligentes dentro de una vivienda. Este programa permitirá a los usuarios interactuar con diversos dispositivos como luces, termostatos, cámaras de seguridad y electrodomésticos, todo desde una interfaz centralizada.
 
-
-🎬 Demo Final - Evidencia de Aprendizaje 3
-
-Instrucciones para la Demo:
-
-Crear un video de máximo 3 minutos donde todo el equipo presente la solución desarrollada.
-
-📋 Requisitos del video:
-
-●	📹 Todos los integrantes deben aparecer con cámara encendida y participar activamente
-
-●	⚡ Demostrar funcionalmente:
-
-○	Sistema de registro e inicio de sesión (usuario estándar y admin)
-
-○	Menús diferenciados por tipo de usuario
-
-○	Al menos 2-3 funcionalidades clave del sistema
-
-●	📊 Mostrar brevemente:
-
-○	Modelo relacional implementado
-
-○	Un pilar del AWS Well-Architected Framework que consideraron central para su proyecto
-
-🎯 Estructura sugerida:
-
-●	👥 Presentación del equipo (15 seg)
-
-●	💻 Demo del sistema en funcionamiento (2 min)
-
-●	🏗️ Pilar Well-Architected destacado y conclusión (30 seg)
-
-📤 Entrega: Subir el video a una plataforma (YouTube, Drive, etc.) y enviar el enlace junto con los demás entregables.
-
-🎓 El video debe evidenciar el trabajo colaborativo y el dominio técnico de todos los integrantes del equipo.
-
 Link al video de presentacion: https://drive.google.com/file/d/1z16YRSw7OubeXPIpnFRZE-_a7y4ddmVb/view?usp=drive_link
 
 ----------------------------------------------------------------------------------------------------------
