@@ -1,4 +1,5 @@
 from auth import cambiar_rol, consultar_perfil, listar_usuarios, logout
+from viviendas import crear_vivienda, mostrar_viviendas, buscar_viviendas_por_usuario
 from mensajes_consola import formatear_mensaje_consola
 from dispositivos import buscar_dispositivo, eliminar_dispositivo, listar_dispositivos, nuevo_dispositivo
 from automatizaciones import cambiar_estado_automatizacion_aspiradora, consultar_automatizaciones_activas, iniciar_automatizacion_aspiradora, cambiar_estado_automatizacion_luces_del_patio, iniciar_automatizacion_luces_del_patio
@@ -9,6 +10,7 @@ def mostrar_opciones_principal_de_app():
     if(states['is_auth']==False):
         print("1. Registrarse")
         print("2. Iniciar sesión")
+        print("3. Salir")
 
    
 
@@ -35,7 +37,7 @@ def mostrar_opciones_para_admin():
     #Permitir modificar el rol de un usuario. 
     print("1. Listar dispositivos")
     print("2. Registrar nuevo dispositivo")
-    print("3. ELiminar un dispositivo")
+    print("3. Eliminar un dispositivo")
     print("4. Buscar dispositivo")
     print("5. Consultar automatizaciones activas")
     print("6. Activar/desactivar automatizaciones")
@@ -43,7 +45,6 @@ def mostrar_opciones_para_admin():
     print("8. Consultar Perfil")
     print("9. Cambiar Rol")
     print("10. Cerrar sesión")
-    print("0. Salir")
 
 def llamar_opciones_para_admin():
     opcion=input('Ingrese una opcion: ')
@@ -67,9 +68,7 @@ def llamar_opciones_para_admin():
         cambiar_rol()                                
     elif(opcion=="10"):
         logout()
-    elif(opcion == '0'):
-        print("Gracias vuelva pronto")
-        return
+        
                                 
 
 def mostrar_opciones_para_estandar():
@@ -81,7 +80,6 @@ def mostrar_opciones_para_estandar():
     print("3. Consultar automatizaciones activas")
     print("4. Activar/desactivar automatizaciones")
     print("5. Cerrar sesión")
-    print("0. Salir")
 
 def llamar_opciones_para_estandar():
     opcion=input('Ingrese una opcion: ')
@@ -95,6 +93,17 @@ def llamar_opciones_para_estandar():
         menu_automatizaciones()
     elif(opcion == '5'):
         logout()
-    elif(opcion == '0'):
-        print("Gracias vuelva pronto")    
-        return
+
+def mostrar_menu_viviendas():
+    print("1. Crear vivienda")
+    print("2. Mostrar vivienda")
+    print("3. Buscar vivienda por usuario")
+
+def llamar_menu_viviendas():
+    opcion=input('Ingrese una opcion: ')
+    if(opcion == '1'):
+        crear_vivienda()
+    elif(opcion == '2'):
+        mostrar_viviendas()
+    elif(opcion == '3'):
+        buscar_viviendas_por_usuario()

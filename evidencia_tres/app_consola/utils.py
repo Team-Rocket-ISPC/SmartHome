@@ -1,5 +1,6 @@
 from datetime import datetime
 from base_de_datos import base_de_datos
+
 def esta_en_rango_horario(hora_inicio, hora_fin):
     hora_actual = datetime.now().time()
     hora_inicio = datetime.strptime(hora_inicio, "%H:%M").time()

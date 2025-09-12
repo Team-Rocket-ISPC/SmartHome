@@ -2,6 +2,7 @@ import datetime
 from utils import buscar_automatizacion_por_nombre, esta_en_rango_horario
 from base_de_datos import base_de_datos
 from mensajes_consola import formatear_mensaje_consola
+
 def iniciar_automatizacion_luces_del_patio():
     automatizacion=buscar_automatizacion_por_nombre("Activar luces del Patio")
     if(automatizacion["estado"]=="inactivo"):

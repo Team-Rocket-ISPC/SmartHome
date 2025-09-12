@@ -3,6 +3,7 @@ from automatizaciones import iniciar_automatizacion_aspiradora, iniciar_automati
 import datetime
 from auth import verificar_rol, login, register
 from states import states
+
 def main():
     print(f"----BIENVENIDO A SMART HOME SOLUTIONS----{datetime.datetime.now().strftime("%H:%M")}")
     iniciar_automatizacion_aspiradora()
@@ -27,6 +28,9 @@ def main():
                         case 'estandar':
                             mostrar_opciones_para_estandar()
                             llamar_opciones_para_estandar()
+            case '3':
+                print("Hasta la proxima.")
+                break
             case _:
                 print("la opcion ingresada no es correcta")
 

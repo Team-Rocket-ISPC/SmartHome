@@ -1,6 +1,7 @@
 from states import states
 from base_de_datos import base_de_datos
 from mensajes_consola import formatear_mensaje_consola
+
 def login():
     if(states['is_auth']):
         formatear_mensaje_consola("ya estas logueado, cierre sesion")
