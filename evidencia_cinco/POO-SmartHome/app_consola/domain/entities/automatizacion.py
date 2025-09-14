@@ -1,5 +1,5 @@
 from datetime import datetime
-from automatizacion_objetivo import AutomatizacionObjetivo
+from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
 
 class Automatizacion:
     ultimo_id = 0  # atributo de clase para autoincremento

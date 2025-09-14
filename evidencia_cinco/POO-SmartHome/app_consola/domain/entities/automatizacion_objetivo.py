@@ -1,7 +1,6 @@
-from dispositivo import Dispositivo
-from ubicacion import Ubicacion #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
-from tipo_dispositivo import TipoDispositivo #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
-from automatizacion import Automatizacion
+from domain.entities.dispositivo import Dispositivo
+#from ubicacion import Ubicacion #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
+#from tipo_dispositivo import TipoDispositivo #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
 
 class AutomatizacionObjetivo:
     def __init__(self, automatizacion, tipo_dispositivo, ubicacion):
