@@ -1,5 +1,0 @@
-1 archivo con extensión .SQL con el script DDL.
-1 archivo con extensión .SQL con las consultas DML solicitadas.
-1 archivo README que explique cómo ejecutar cada script en un DBMS online.
-
-Despues eliminar estas lineas

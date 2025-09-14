@@ -1,0 +1,134 @@
+CREATE TABLE USUARIO (
+    correo VARCHAR(100) PRIMARY KEY NOT NULL,
+    nombres VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(150) NOT NULL,
+    contrasena VARCHAR(225) NOT NULL,
+    es_activo BOOLEAN NOT NULL
+);
+
+CREATE TABLE VIVIENDA (
+    id_vivienda INT AUTO_INCREMENT PRIMARY KEY,
+    direccion VARCHAR(100) NOT NULL,
+    codigo_postal VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE TIPO_DISPOSITIVO (
+    id_tipo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE UBICACION (
+    id_ubicacion INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    id_vivienda INT NOT NULL,
+    CONSTRAINT FK_UBICACION_VIVIENDA FOREIGN KEY (id_vivienda) REFERENCES VIVIENDA(id_vivienda)
+);
+
+CREATE TABLE USUARIO_VIVIENDA (
+    correo VARCHAR(100) NOT NULL,
+    id_vivienda INT NOT NULL,
+    rol VARCHAR(20) NOT NULL CHECK (rol IN ('Admin', 'Estandar')),
+    CONSTRAINT PK_USUARIO_VIVIENDA PRIMARY KEY (correo, id_vivienda),
+    CONSTRAINT FK_USUARIO_VIVIENDA_USUARIO FOREIGN KEY (correo) REFERENCES USUARIO(correo),
+    CONSTRAINT FK_USUARIO_VIVIENDA_VIVIENDA FOREIGN KEY (id_vivienda) REFERENCES VIVIENDA(id_vivienda)
+);
+
+CREATE TABLE DISPOSITIVO (
+    id_dispositivo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    estado BOOLEAN NOT NULL,
+    fecha_hora DATETIME NOT NULL,
+    id_tipo INT NOT NULL,
+    id_ubicacion INT NOT NULL,
+    CONSTRAINT FK_DISPOSITIVO_TIPO FOREIGN KEY (id_tipo) REFERENCES TIPO_DISPOSITIVO(id_tipo),
+    CONSTRAINT FK_DISPOSITIVO_UBICACION FOREIGN KEY (id_ubicacion) REFERENCES UBICACION(id_ubicacion)
+);
+
+CREATE TABLE ACCION (
+    id_accion INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    id_tipo INT NOT NULL,
+    CONSTRAINT FK_ACCION_TIPO FOREIGN KEY (id_tipo) REFERENCES TIPO_DISPOSITIVO(id_tipo)
+);
+
+CREATE TABLE CONFIGURACION_DISPOSITIVO (
+    id_configuracion INT AUTO_INCREMENT PRIMARY KEY,
+    id_dispositivo INT NOT NULL,
+    atributo VARCHAR(50) NOT NULL,
+    valor VARCHAR(50) NOT NULL,
+    CONSTRAINT FK_CONFIG_DISPOSITIVO FOREIGN KEY (id_dispositivo) REFERENCES DISPOSITIVO(id_dispositivo)
+);
+
+CREATE TABLE AUTOMATIZACIONES (
+    id_automatizacion INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    id_vivienda INT NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
+    activa BOOLEAN NOT NULL,
+    CONSTRAINT FK_AUTOMATIZACIONES_VIVIENDA FOREIGN KEY (id_vivienda) REFERENCES VIVIENDA(id_vivienda)
+);
+
+CREATE TABLE AUTOMATIZACION_OBJETIVO (
+    id_automatizacion INT NOT NULL,
+    id_tipo INT NOT NULL,
+    id_ubicacion INT NOT NULL,
+    CONSTRAINT PK_AUTOMATIZACION_OBJETIVO PRIMARY KEY (id_automatizacion, id_tipo, id_ubicacion),
+    CONSTRAINT FK_AUTO_OBJ_AUTOMATIZACION FOREIGN KEY (id_automatizacion) REFERENCES AUTOMATIZACIONES(id_automatizacion),
+    CONSTRAINT FK_AUTO_OBJ_TIPO FOREIGN KEY (id_tipo) REFERENCES TIPO_DISPOSITIVO(id_tipo),
+    CONSTRAINT FK_AUTO_OBJ_UBICACION FOREIGN KEY (id_ubicacion) REFERENCES UBICACION(id_ubicacion)
+);
+
+-- DML (Inserción de datos)
+INSERT INTO USUARIO (correo,nombres,apellidos,contrasena,es_activo) VALUES ('nahuel@gmail.com','Nahuel','Mclay','1234',1);
+INSERT INTO USUARIO (correo,nombres,apellidos,contrasena,es_activo) VALUES ('mariano@gmail.com','Mariano','Batista','abcd',1);
+INSERT INTO USUARIO (correo,nombres,apellidos,contrasena,es_activo) VALUES ('cristian@gmail.com','Cristian','Murua','pass',0);
+
+INSERT INTO VIVIENDA (direccion,codigo_postal) VALUES ('Calle 123','5000');
+INSERT INTO VIVIENDA (direccion,codigo_postal) VALUES ('Av. Siempreviva 742','5010');
+
+INSERT INTO TIPO_DISPOSITIVO (nombre) VALUES ('iluminación');
+INSERT INTO TIPO_DISPOSITIVO (nombre) VALUES ('aspiradora');
+INSERT INTO TIPO_DISPOSITIVO (nombre) VALUES ('aire acondicionado');
+
+INSERT INTO UBICACION (nombre,id_vivienda) VALUES ('Cocina',1);
+INSERT INTO UBICACION (nombre,id_vivienda) VALUES ('Patio',1);
+INSERT INTO UBICACION (nombre,id_vivienda) VALUES ('Comedor',1);
+INSERT INTO UBICACION (nombre,id_vivienda) VALUES ('Dormitorio',2);
+
+INSERT INTO USUARIO_VIVIENDA (correo,id_vivienda,rol) VALUES ('nahuel@gmail.com',1,'Admin');
+INSERT INTO USUARIO_VIVIENDA (correo,id_vivienda,rol) VALUES ('mariano@gmail.com',1,'Estandar');
+INSERT INTO USUARIO_VIVIENDA (correo,id_vivienda,rol) VALUES ('cristian@gmail.com',2,'Admin');
+
+INSERT INTO DISPOSITIVO (nombre,estado,fecha_hora,id_tipo,id_ubicacion) VALUES ('Luz Patio',0,NOW(),1,2);
+INSERT INTO DISPOSITIVO (nombre,estado,fecha_hora,id_tipo,id_ubicacion) VALUES ('Aspiradora Comedor',0,NOW(),2,3);
+INSERT INTO DISPOSITIVO (nombre,estado,fecha_hora,id_tipo,id_ubicacion) VALUES ('Aire Dormitorio',1,NOW(),3,4);
+
+INSERT INTO ACCION (nombre,id_tipo) VALUES ('Encender',1);
+INSERT INTO ACCION (nombre,id_tipo) VALUES ('Apagar',1);
+INSERT INTO ACCION (nombre,id_tipo) VALUES ('Activar',2);
+INSERT INTO ACCION (nombre,id_tipo) VALUES ('Desactivar',2);
+INSERT INTO ACCION (nombre,id_tipo) VALUES ('Subir Temp',3);
+INSERT INTO ACCION (nombre,id_tipo) VALUES ('Bajar Temp',3);
+
+INSERT INTO CONFIGURACION_DISPOSITIVO (id_dispositivo,atributo,valor) VALUES (1,'intensidad','80');
+INSERT INTO CONFIGURACION_DISPOSITIVO (id_dispositivo,atributo,valor) VALUES (2,'modo','auto');
+INSERT INTO CONFIGURACION_DISPOSITIVO (id_dispositivo,atributo,valor) VALUES (3,'temperatura','24');
+
+INSERT INTO AUTOMATIZACIONES (nombre,id_vivienda,hora_inicio,hora_fin,activa) VALUES ('Activar luces del Patio',1,'19:00:00','23:59:59',1);
+INSERT INTO AUTOMATIZACIONES (nombre,id_vivienda,hora_inicio,hora_fin,activa) VALUES ('activador/desactivador aspiradora',1,'09:00:00','11:00:00',1);
+
+INSERT INTO AUTOMATIZACION_OBJETIVO (id_automatizacion,id_tipo,id_ubicacion) VALUES (1,1,2);
+INSERT INTO AUTOMATIZACION_OBJETIVO (id_automatizacion,id_tipo,id_ubicacion) VALUES (2,2,3);
+
+-- Consultas para verificar los datos
+SELECT * FROM USUARIO;
+SELECT * FROM VIVIENDA;
+SELECT * FROM USUARIO_VIVIENDA;
+SELECT * FROM TIPO_DISPOSITIVO;
+SELECT * FROM UBICACION;
+SELECT * FROM DISPOSITIVO;
+SELECT * FROM ACCION;
+SELECT * FROM CONFIGURACION_DISPOSITIVO;
+SELECT * FROM AUTOMATIZACIONES;
+SELECT * FROM AUTOMATIZACION_OBJETIVO;
