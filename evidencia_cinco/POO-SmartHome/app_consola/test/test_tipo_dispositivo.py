@@ -1,5 +1,5 @@
 import pytest
-from entities import TipoDispositivo
+from tipo_dispositivo import TipoDispositivo
 
 def test_crear_tipo_dispositivo_valido():
     tipo = TipoDispositivo(1, "Sensor")
