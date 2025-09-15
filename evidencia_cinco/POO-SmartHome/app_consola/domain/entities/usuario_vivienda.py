@@ -2,38 +2,28 @@
 class UsuarioVivienda:
     ROLES_VALIDOS = {"Admin", "Estandar"}
 
-    def __init__(self, usuario, vivienda_id, rol):
-        self.usuario = usuario
-        self.vivienda_id = vivienda_id
+    def __init__(self, correo, id_vivienda, rol):
+        self.correo = correo
+        self.id_vivienda = id_vivienda
         self.rol = rol
 
-    # Getter y Setter de usuario
+    # Getter y Setter de correo
     @property
-    def usuario(self):
-        return self._usuario
+    def correo(self):
+        return self._correo
 
-    @usuario.setter
-    def usuario(self, value: str):
+    @correo.setter
+    def correo(self, value: str):
         if not isinstance(value, str):
             raise TypeError("Debe ser string")
-        self._usuario = value
-
-    # Getter y Setter de nombre
-    @property
-    def nombre(self):
-        return self._nombre
-
-    @nombre.setter
-    def nombre(self, value: str):
         if "@" not in value or "." not in value:
-            raise ValueError("correo debe tener formato válido")
-        if not value or len(value.strip()) < 3 :
-            raise ValueError("El nombre no puede ser menor a 3 caracteres")
+            raise ValueError("El correo debe tener formato válido")
+        if not value.strip() or len(value.strip()) < 3:
+            raise ValueError("El correo no puede tener menos de 3 caracteres")
         if len(value) > 50:
-            raise ValueError("El nombre no puede superar los 50 caracteres")
-        if value not in self.ROLES_VALIDOS:
-            raise ValueError(f"rol debe ser uno de {self.ROLES_VALIDOS}")
-        self._nombre = value.strip()
+            raise ValueError("El correo no puede superar los 50 caracteres")
+        self._correo = value.strip()
+       
 
     # Getter y Setter de id_vivienda
     @property
@@ -43,5 +33,20 @@ class UsuarioVivienda:
     @id_vivienda.setter
     def id_vivienda(self, value: int):
         if not isinstance(value, int):
-            raise TypeError("Debe ser entero")
+            raise TypeError("El id de la vivienda debe ser un entero")
+        if value < 0:
+            raise ValueError("El id de la vivienda no puede ser negativo")
         self._id_vivienda = value
+
+    # Getter y Setter de rol
+    @property
+    def rol(self):
+        return self._rol
+
+    @rol.setter
+    def rol(self, value: str):
+        if not isinstance(value, str):
+            raise TypeError("El rol debe ser un string")
+        if value not in self.ROLES_VALIDOS:
+            raise ValueError(f"El rol debe ser uno de {self.ROLES_VALIDOS}")
+        self._rol = value

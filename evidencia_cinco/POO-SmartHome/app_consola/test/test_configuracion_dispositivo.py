@@ -1,5 +1,5 @@
 import pytest
-from configuracion_dispositivo import ConfiguracionDispositivo
+from domain.entities.configuracion_dispositivo import ConfiguracionDispositivo
 
 def test_creacion_correcta():
     config = ConfiguracionDispositivo(1, 10, "modo", "automatico")

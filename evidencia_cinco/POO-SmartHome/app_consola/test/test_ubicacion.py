@@ -2,7 +2,7 @@
 # TESTS UBICACION
 # -------------------------
 import pytest
-from ubicacion import Ubicacion
+from domain.entities.ubicacion import Ubicacion
 
 def test_crear_ubicacion_valida():
     ubi = Ubicacion(1, "Living", 10)

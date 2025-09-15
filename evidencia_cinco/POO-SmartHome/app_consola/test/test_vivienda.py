@@ -1,5 +1,5 @@
 import pytest
-from vivienda import Vivienda  
+from domain.entities.vivienda import Vivienda  
 
 def test_crear_vivienda():
     v = Vivienda(1, "Calle 123", 5000)

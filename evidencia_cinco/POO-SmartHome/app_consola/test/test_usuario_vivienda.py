@@ -1,5 +1,5 @@
 import pytest
-from usuario_vivienda import UsuarioVivienda
+from domain.entities.usuario_vivienda import UsuarioVivienda
 
 def test_crear_usuario_vivienda_valido():
     uv = UsuarioVivienda("user@test.com", 1, "Admin")

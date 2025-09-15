@@ -1,5 +1,5 @@
 import pytest
-from accion import Accion
+from domain.entities.accion import Accion
 
 
 # ---- TESTS PARA ACCION ----

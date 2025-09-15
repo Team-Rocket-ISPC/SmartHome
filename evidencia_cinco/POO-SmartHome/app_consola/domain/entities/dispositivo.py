@@ -1,6 +1,6 @@
-#from ubicacion import Ubicacion  #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
-#from tipo_dispositivo import TipoDispositivo #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
-
+from domain.entities.tipo_dispositivo import TipoDispositivo #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
+from domain.entities.ubicacion import Ubicacion #Revisar al finalizar que se hayan nomeclado igual los modulos y clases
+  
 class Dispositivo:
     ultimo_id = 0  # atributo de clase para autoincremento de id_dispositivo--> Aplicar igual en Vivienda y id_tipo
     

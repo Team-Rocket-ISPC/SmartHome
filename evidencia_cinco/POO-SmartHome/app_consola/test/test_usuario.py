@@ -1,5 +1,5 @@
 import pytest
-from usuario import Usuario
+from domain.entities.usuario import Usuario
 
 def test_crear_usuario_valido():
     u = Usuario("correo@test.com", "1234", "Jere")

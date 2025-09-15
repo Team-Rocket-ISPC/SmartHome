@@ -4,16 +4,20 @@ class Ubicacion:
         self.id_ubicacion = id_ubicacion
         self.nombre = nombre
         self.id_vivienda = id_vivienda
-
+        self.dispositivos = [] #Se agrego esta lista para los metodos de dispositivos
     # Getter y Setter de id_ubicacion
     @property
     def id_ubicacion(self):
         return self._id_ubicacion
 
+
     @id_ubicacion.setter
     def id_ubicacion(self, value: int):
         if not isinstance(value, int):
             raise TypeError("Debe ser entero")
+        #se agrega esta validacion para que pase el test si el id es negativo
+        elif value < 0:
+            raise ValueError("El id de la ubicación no puede ser negativo")
         self._id_ubicacion = value
 
     # Getter y Setter de nombre
