@@ -7,13 +7,13 @@ def login():
         formatear_mensaje_consola("ya estas logueado, cierre sesion")
         return 
 
-    nombre=input("ingrese nombre de usuario: ").strip().lower()
+    correo=input("ingrese su correo: ").strip().lower()
     contraseña=input("ingrese contraseña: ").strip().lower()
     for usuario in base_de_datos['usuarios']:
-        if (usuario['nombre']==nombre and usuario['contraseña']==contraseña):
+        if (usuario['correo']==correo and usuario['contraseña']==contraseña):
             
             states['is_auth']=True
-            states['nombre']=nombre
+            states['correo']=correo
             states['contraseña']=contraseña
             states['Role']=usuario['Role']
             
@@ -23,7 +23,7 @@ def login():
 
     else:
             
-            formatear_mensaje_consola("Usuario o contraseña incorrectos")
+            formatear_mensaje_consola("Correo o contraseña incorrectos")
             
             return
 
@@ -32,10 +32,11 @@ def register():
     if(states['is_auth']):
         formatear_mensaje_consola("Cierre sesion primero")
         return 
+    correo=input("ingrese su Correo electronico: ")
     nombre=input("ingrese nombre de usuario: ").strip().lower()
     contraseña=input("ingrese contraseña: ").strip().lower()
     for usuario in base_de_datos['usuarios']:
-        if (usuario['nombre']==nombre):
+        if (usuario['correo']==correo):
            
             formatear_mensaje_consola("Usuario ya existe.")
            
@@ -44,6 +45,7 @@ def register():
         'id':len(base_de_datos['usuarios'])+1,
         'nombre':nombre,
         'contraseña':contraseña,
+        "correo": correo,
         'is_auth':False,
         'Role':'estandar'
     }
@@ -57,6 +59,7 @@ def verificar_rol():
 
 def logout():
     states['is_auth']=False
+    states["correo"]=""
     states['nombre']=""
     states['contraseña']=""
     states['Role']=""
@@ -89,18 +92,18 @@ def cambiar_rol():
     if(verify_admin()==False):
         formatear_mensaje_consola("No tiene permisos para realizar esta acción")
         return
-    nombre=input("ingrese nombre de usuario: ").strip().lower()
-    if(nombre=="admin"):
-        formatear_mensaje_consola("No se puede cambiar el rol de admin")
+    correo=input("ingrese el correo de usuario: ").strip().lower()
+    if(correo=="admin@mail.com"):
+        formatear_mensaje_consola("No se puede cambiar el rol del administrador del software")
         return
-    if(nombre==states['nombre']):
+    if(correo==states['correo']):#REEVALUAR YA QUE NO DEBERIA DEJARLE A NADIE MAS QUE AL ADMIN CAMBIAR ROLES
         formatear_mensaje_consola("No se puede cambiar el rol de usted mismo")
         return
     for usuario in base_de_datos['usuarios']:
-        if (usuario['nombre']==nombre and usuario["Role"]=='estandar') :
+        if (usuario['correo']==correo and usuario["Role"]=='estandar') :
             usuario['Role']='admin'
             formatear_mensaje_consola(f"se cambia el rol de {usuario['nombre']} a admin")
-        elif (usuario['nombre']==nombre and usuario["Role"]=='admin'):
+        elif (usuario['correo']==correo and usuario["Role"]=='admin'):
             usuario['Role']='estandar'
             formatear_mensaje_consola(f"se cambia el rol de {usuario['nombre']} a estandar")
         else:
@@ -109,10 +112,5 @@ def cambiar_rol():
         
            
         
-def listar_usuarios():
-    if(verify_admin()==False):
-        formatear_mensaje_consola("No tiene permisos para realizar esta acción")
-        return
-    for usuario in base_de_datos['usuarios']:
-        formatear_mensaje_consola(f"Usuario: {usuario['nombre']}, Role: {usuario['Role'] }")
+
             
