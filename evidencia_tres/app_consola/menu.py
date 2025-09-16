@@ -1,75 +1,138 @@
-from auth import cambiar_rol, consultar_perfil, listar_usuarios, logout
-from viviendas import crear_vivienda, mostrar_viviendas, buscar_viviendas_por_usuario
-from mensajes_consola import formatear_mensaje_consola
-from dispositivos import buscar_dispositivo, eliminar_dispositivo, listar_dispositivos, nuevo_dispositivo
-from automatizaciones import cambiar_estado_automatizacion_aspiradora, consultar_automatizaciones_activas, iniciar_automatizacion_aspiradora, cambiar_estado_automatizacion_luces_del_patio, iniciar_automatizacion_luces_del_patio
-from states import states
+import states
+from usuario import * 
+from viviendas import * 
+from automatizaciones import * 
+from dispositivos import *
 
 
+#-------------MENU PRINCIPAL-------------
 def mostrar_opciones_principal_de_app():
     if(states['is_auth']==False):
         print("1. Registrarse")
         print("2. Iniciar sesión")
         print("3. Salir")
 
-   
 
-def menu_automatizaciones():
+#------------MENU ADMIN------------------#
+def menu_admin():
+    formatear_mensaje_consola("MENU ADMIN")
+    print("1. Usuarios")
+    print("2. Viviendas")
+    print("3. Dispositivos")
+    print("4. Automatizaciones")
+    print("5. Regresar al menu anterior")
+    
+    opcion_admin = input('Ingrese una opcion: ')
+    if(opcion_admin == '1'):
+        menu_usuario()
+    elif(opcion_admin == '2'):
+        menu_vivienda()
+    elif(opcion_admin == '3'):
+        menu_dispositivo()
+    elif(opcion_admin=="4"):
+        menu_automatizacion()
+    elif(opcion_admin=="5"):
+        logout()
+#--------------MENU ESTANDAR--------------#
+def menu_estandar():
     while True:
-        print("1. Activar/desactivar automatizacion de luces del patio")
-        print("2. Activar/desactivar aspiradora salon")
-        print("0. Salir de automatizaciones")
-        opcion2 = input("Ingrese una opcion: ")
-        
-        if(opcion2 == '1'):
-            cambiar_estado_automatizacion_luces_del_patio()
-            iniciar_automatizacion_luces_del_patio()
-        elif(opcion2 == '2'):
-            cambiar_estado_automatizacion_aspiradora()
-            iniciar_automatizacion_aspiradora()
-        elif(opcion2 == '0'):
-            formatear_mensaje_consola("Saliste del menu automatizaciones")
+        formatear_mensaje_consola("Mis viviendas")
+        viviendas_encontradas = buscar_viviendas_por_usuario(correo=states['correo'])
+        if viviendas_encontradas == []:
+            crear_vivienda(correo=states['correo'])
+            viviendas_encontradas = buscar_viviendas_por_usuario(correo=states['correo'])
+            
+        opcion_admin = input('Ingrese el ID de la vivienda que quiere revisar : ')
+        if(opcion_admin == '1'):
+            menu_usuario()
+
+#--------------MENU USUARIOS--------------#
+def menu_usuario():
+    while True:
+        formatear_mensaje_consola("MENU USUARIOS")
+        print("1. Crear nuevo usuario")
+        print("2. Eliminar usuario existente")
+        print("3. Mostrar todos los usuarios")
+        print("4. Cambiar Rol a un usuario")
+        print("5. Regresar al menu anterior")
+
+        opcion_usuarios = input('Ingrese una opcion: ')
+        if(opcion_usuarios == '1'):
+            crear_usuario()
+        elif(opcion_usuarios == '2'):
+            eliminar_usuario()
+        elif(opcion_usuarios == '3'):
+            listar_usuarios()
+        elif(opcion_usuarios=="4"):
+            cambiar_rol()
+        elif(opcion_usuarios=="5"):
             break
 
-def mostrar_opciones_para_admin(): 
-    #Permitir consultar automatizaciones activas
-    #Gestionar dispositivos.
-    #Permitir modificar el rol de un usuario. 
-    print("1. Listar dispositivos")
-    print("2. Registrar nuevo dispositivo")
-    print("3. Eliminar un dispositivo")
-    print("4. Buscar dispositivo")
-    print("5. Consultar automatizaciones activas")
-    print("6. Activar/desactivar automatizaciones")
-    print("7. Listar Usuarios")
-    print("8. Consultar Perfil")
-    print("9. Cambiar Rol")
-    print("10. Cerrar sesión")
+#--------------MENU VIVIENDAS--------------#
+def menu_vivienda():
+    while True:
+        formatear_mensaje_consola("MENU VIVIENDAS")
+        print("1. Crear Vivienda")
+        print("2. Mostrar todas las viviendas")
+        print("3. Mostrar viviendas de un usuario")
+        print("4. Regresar al menu anterior")
+    
+        opcion_vivienda=input('Ingrese una opcion: ')
+        if(opcion_vivienda == '1'):
+            crear_vivienda()
+        elif(opcion_vivienda == '2'):
+            mostrar_viviendas()
+        elif(opcion_vivienda == '3'):
+            buscar_viviendas_por_usuario()
+        elif(opcion_vivienda =="4"):
+            break
 
-def llamar_opciones_para_admin():
-    opcion=input('Ingrese una opcion: ')
-    if(opcion == '1'):
-        listar_dispositivos()
-    elif(opcion == '2'):
-        nuevo_dispositivo()
-    elif(opcion == '3'):
-        eliminar_dispositivo()
-    elif(opcion == '4'):
-        buscar_dispositivo()                                
-    elif(opcion == '5'):
-        consultar_automatizaciones_activas()                                
-    elif(opcion=="6"):
-        menu_automatizaciones()                                
-    elif(opcion=="7"):
-        listar_usuarios()
-    elif(opcion=="8"):
-        consultar_perfil()
-    elif(opcion=="9"):
-        cambiar_rol()                                
-    elif(opcion=="10"):
-        logout()
-        
-                                
+#--------------MENU DISPOSITIVOS--------------#
+def menu_dispositivo():
+    while True:
+        formatear_mensaje_consola("MENU DISPOSITIVOS")
+        print("1. Crear Dispositivo")
+        print("2. Eliminar Dispositivo")
+        print("3. Mostrar todos los dispositivos")
+        print("4. Buscar un dispositivo")
+        print("5. Regresar al menu anterior")
+
+        opcion_dispositivo=input('Ingrese una opcion: ')
+        if(opcion_dispositivo == '1'):
+            nuevo_dispositivo()
+        elif(opcion_dispositivo == '2'):
+            eliminar_dispositivo()
+        elif(opcion_dispositivo == '3'):
+            listar_dispositivos()
+        elif(opcion_dispositivo=="4"):
+            buscar_dispositivo()    
+        elif(opcion_dispositivo =="5"):
+            break   
+
+#--------------MENU AUTOMATIZACIONES--------------#
+def menu_automatizacion():
+    while True:
+        formatear_mensaje_consola("MENU AUTOMATIZACIONES")
+        print("1. Crear nueva automatizacion")
+        print("2. Eliminar automatizacion existente")
+        print("3. Mostrar todos las automatizaciones")
+        print("4. Modificar una automatizacion")
+        print("5. Regresar al menu anterior")
+
+        opcion_automatizacion = input('Ingrese una opcion: ')
+        if(opcion_automatizacion == '1'):
+            crear_usuario()
+        elif(opcion_automatizacion == '2'):
+            eliminar_usuario()
+        elif(opcion_automatizacion == '3'):
+            listar_usuarios()
+        elif(opcion_automatizacion=="4"):
+            cambiar_rol()
+        elif(opcion_automatizacion=="5"):
+            break
+
+# # REDISEÑAR ESTO DE ABAJO OPCIONES ESTANDAR, CREAR MENUES
+"""""
 
 def mostrar_opciones_para_estandar():
     #Permitir consultar los datos personales.
@@ -93,17 +156,4 @@ def llamar_opciones_para_estandar():
         menu_automatizaciones()
     elif(opcion == '5'):
         logout()
-
-def mostrar_menu_viviendas():
-    print("1. Crear vivienda")
-    print("2. Mostrar vivienda")
-    print("3. Buscar vivienda por usuario")
-
-def llamar_menu_viviendas():
-    opcion=input('Ingrese una opcion: ')
-    if(opcion == '1'):
-        crear_vivienda()
-    elif(opcion == '2'):
-        mostrar_viviendas()
-    elif(opcion == '3'):
-        buscar_viviendas_por_usuario()
+"""
