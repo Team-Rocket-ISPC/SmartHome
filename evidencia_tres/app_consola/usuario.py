@@ -3,7 +3,6 @@ from auth import *
 from states import states
 
 def crear_usuario():
-    nuevo_usuario = Usuario()
     correo = input("Ingrese correo electronico: ").strip().lower()
     contraseña = input("Ingrese una contraseña: ").strip().lower()
     nombre = input("Ingrese Nombre de usuario: ").strip().lower()
