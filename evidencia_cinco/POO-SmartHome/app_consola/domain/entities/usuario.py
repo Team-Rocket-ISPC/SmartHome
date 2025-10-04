@@ -5,7 +5,6 @@ class Usuario:
         self.apellidos = apellidos
         self.contraseña = contraseña
         self.es_activo = es_activo
-
     
     @property
     def correo(self):

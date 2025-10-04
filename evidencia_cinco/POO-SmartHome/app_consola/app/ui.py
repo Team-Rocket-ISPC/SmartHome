@@ -1,13 +1,12 @@
 from abc import ABC
+import re
 from infraestructure.daos.mysql_usuario_dao import MySQLUsuarioDAO # Implementación concreta
 from domain.entities.usuario import Usuario
 
-# CONCEPTO IMPORTANTE: CLASES ESTATICAS
-# Clase UI para manejar la interfaz de usuario en la consola
-# Debe ser abstracta y no instanciable
-# Contiene métodos estáticos para mostrar menús y obtener entradas del usuario
-usuario1 = Usuario(id=1, correo="usuario1@example.com", nombres="Usuario", apellidos="Uno", contraseña="password123", es_activo=True)
 class UI(ABC):
+    """Clase abstracta para la interfaz de usuario en consola.
+    Contiene métodos estáticos para mostrar menús, obtener y validar entradas del usuario.
+    No se puede instanciar directamente."""
 
     def __new__(cls):
         if cls is UI:
@@ -51,6 +50,29 @@ class UI(ABC):
         nombre = input("Ingrese su/s nombre/s: ")
         apellido = input("Ingrese su/s apellido/s: ")
         contraseña = input("Ingrese su contraseña: ")
-        # Crear una instancia del usuario, tal vez no sea la mejor idea. SOLO PARA PRUEBAS
-        usuario = Usuario(correo=correo, nombres=nombre, apellidos=apellido, contraseña=contraseña, es_activo=True)
-        return usuario
+
+
+        if UI.validar_entrada(correo, nombre, apellido, contraseña):
+            usuario = Usuario(correo=correo, nombres=nombre, apellidos=apellido, contraseña=contraseña, es_activo=True)
+            return usuario
+        else:
+            return UI.obtener_datos_usuario()
+        
+    @staticmethod
+    def validar_entrada(correo, nombre, apellido, contraseña):
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", correo):
+            print("Correo inválido. Revise formato.")
+            return UI.obtener_datos_usuario()
+        if len(nombre) < 3 or not nombre:
+            print("El nombre debe tener al menos 3 caracteres.")
+            return UI.obtener_datos_usuario()
+        if len(apellido) < 3 or not apellido:
+            print("El apellido debe tener al menos 3 caracteres.")
+            return UI.obtener_datos_usuario()
+        if len(contraseña) < 4 or not contraseña:
+            print("La contraseña debe tener al menos 4 caracteres.")
+            return UI.obtener_datos_usuario()
+        else:
+            return True
+
+        
