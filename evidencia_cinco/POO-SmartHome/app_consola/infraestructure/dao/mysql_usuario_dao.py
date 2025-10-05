@@ -1,11 +1,11 @@
 
 import mysql.connector
 from domain.entities.usuario import Usuario
-from domain.repositories.usuarioDAO import IUsuarioRepository
+from domain.repositories.usuario_dao import IUsuarioDao
 from core.database import Database
 
-# Implementación concreta de IUsuarioRepository para MySQL
-class MySQLUsuarioDAO(IUsuarioRepository):
+# Implementación concreta de IUsuarioDao para MySQL
+class MySQLUsuarioDAO(IUsuarioDao):
     # Varible de clase, hace que todas las instancias compartan la misma conexión. No es lo mas adecuado.
     # conexion = Database().get_connection()
     # Sería mejor manejar la conexión en cada método o usar un patrón de diseño como Singleton
@@ -29,15 +29,15 @@ class MySQLUsuarioDAO(IUsuarioRepository):
         with conexion.cursor() as cursor:
             try:
                 query = "INSERT INTO usuario (correo, nombres, apellidos, contrasena, es_activo) VALUES (%s, %s, %s, %s, %s)"
-                cursor.execute(query, (usuario.correo, usuario.nombres, usuario.apellidos, usuario.contraseña, usuario.es_activo))
+                cursor.execute(query, (usuario.correo, usuario.nombres, usuario.apellidos, usuario.contrasena, usuario.es_activo))
                 conexion.commit()
                 print(f"Usuario agregado con exito: {usuario.correo}")
             except mysql.connector.Error as err:
                 print(f"Error al agregar usuario: {err}")
                 conexion.rollback()
 
-    def obtener_usuario(self, usuario_id: int) -> Usuario:
-
+    def obtener_usuario(self, correo: str) -> Usuario:
+        """Obtiene un usuario por su correo"""
         conexion = self._get_connection()
         if not conexion:
             print("No se pudo establecer la conexión a la base de datos.")
@@ -45,11 +45,11 @@ class MySQLUsuarioDAO(IUsuarioRepository):
         with conexion.cursor() as cursor:
             try:
                 cursor = conexion.cursor(dictionary=True)
-                query = "SELECT * FROM usuario WHERE id = %s"
-                cursor.execute(query, (usuario_id,))
+                query = "SELECT * FROM usuario WHERE correo = %s"
+                cursor.execute(query, (correo,))
                 result = cursor.fetchone()
                 if result:
-                        return Usuario(id=result['id'], email=result['correo'], nombre=result['nombre'], apellido=result['apellido'], contraseña=result['contraseña'])
+                        return Usuario(correo=result['correo'], nombre=result['nombres'], apellidos=result['apellidos'], contrasena=result['contrasena'])
                 else:
                     print("Usuario no encontrado.")
                     return None 

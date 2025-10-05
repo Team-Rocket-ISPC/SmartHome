@@ -4,7 +4,7 @@ from domain.entities.usuario import Usuario
 # Interfaces DAO (abstracciones), en dominio
 
 # Interfaz DAO para la entidad Usuario
-class IUsuarioRepository(ABC):
+class IUsuarioDao(ABC):
     # def __init__(self):
 
     @abstractmethod
