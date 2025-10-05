@@ -1,8 +1,6 @@
-from domain.entities.ubicacion import Ubicacion
-from domain.entities.usuario_vivienda import UsuarioVivienda
 
 def main():
-    print()
+    print("BIENVENIDO AL PROGRAMA")
 
 
 
