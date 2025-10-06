@@ -34,10 +34,22 @@ class UI(ABC):
         elif opcion == '2':
             datos = UI.iniciar_sesion()
             repo = MySQLUsuarioAutorizacionDAO()  # Cambiado a la implementación concreta
-            user = repo.autorizar_usuario(datos[0], datos[1])
-            if user:
+            usuario = repo.autorizar_usuario(datos[0], datos[1])
+            if usuario and usuario.is_auth:
                 print("Inicio de sesión exitoso.")
                 # Aquí puedes agregar lógica adicional para el usuario autenticado
+                #Aca deberia llamar a un nuevo menu para otra tarea
+                UI.mostrar_menu_estandar()
+                opcion = UI.obtener_opcion()
+                if opcion == '1':
+                    print(usuario)
+                elif opcion == '2':
+                    print("Consultando dispositivos...")
+                elif opcion == '3':
+                    print("Cerrando sesión...")
+                else:
+                    print("Opción no válida.")
+
                 return 'Inicio de sesión completado'
             else:
                 print("Inicio de sesión fallido.")
@@ -59,11 +71,11 @@ class UI(ABC):
         correo = input("Ingrese su correo: ")
         nombre = input("Ingrese su/s nombre/s: ")
         apellido = input("Ingrese su/s apellido/s: ")
-        contraseña = input("Ingrese su contraseña: ")
+        contrasena = input("Ingrese su contraseña: ")
 
 
-        if UI.validar_entrada(correo, nombre, apellido, contraseña):
-            usuario = Usuario(correo=correo, nombres=nombre, apellidos=apellido, contraseña=contraseña, es_activo=True)
+        if UI.validar_entrada(correo, nombre, apellido, contrasena):
+            usuario = Usuario(correo=correo, nombres=nombre, apellidos=apellido, contrasena=contrasena, es_activo=True)
             return usuario
         else:
             return UI.obtener_datos_usuario()

@@ -55,3 +55,6 @@ class Usuario:
     @es_activo.setter
     def es_activo(self, value):
         self._es_activo = value
+
+    def __str__(self):
+        return f"Usuario(correo={self.correo}, nombres={self.nombres}, apellidos={self.apellidos}, es_activo={self.es_activo})"

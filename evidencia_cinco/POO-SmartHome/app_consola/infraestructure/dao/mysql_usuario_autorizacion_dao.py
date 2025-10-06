@@ -15,6 +15,9 @@ class MySQLUsuarioAutorizacionDAO(IUsuarioAutorizacionDao):
         """Obtiene una nueva conexión para cada operación"""
         return self.database.get_connection()
 
+    def __str__(self):
+        return super().__str__()
+
     def autorizar_usuario(self, correo: str, contrasena: str) -> UsuarioAutenticacion:
         conexion = self._get_connection()
         if not conexion:
@@ -27,7 +30,7 @@ class MySQLUsuarioAutorizacionDAO(IUsuarioAutorizacionDao):
                 result = cursor.fetchone()
                 # Si se encuentra el usuario, se retorna una instancia de Usuario
                 if result:
-                    return UsuarioAutenticacion(result[0], result[1], result[2], result[3], result[4], result[5], is_auth=True, role='estandar')
+                    return UsuarioAutenticacion(result[0], result[1], result[2], result[3], result[4], is_auth=True, role='Estandar')
                 else:
                     print("Usuario no encontrado o contraseña incorrecta.")
                     return None
