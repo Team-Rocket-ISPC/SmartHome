@@ -1,8 +1,10 @@
 from abc import ABC
 import re
-from infraestructure.dao.mysql_usuario_dao import MySQLUsuarioDAO # Implementación concreta
-from infraestructure.dao.mysql_usuario_autorizacion_dao import MySQLUsuarioAutorizacionDAO # Implementación concreta
+from infraestructure.dao.mysql_usuario_dao import MySQLUsuarioDAO
+from infraestructure.dao.mysql_usuario_autorizacion_dao import MySQLUsuarioAutorizacionDAO
+from infraestructure.mysql_vivienda_dao import MySQLViviendaDAO
 from domain.entities.usuario import Usuario
+from app.ui_aux import mostrar_menu_principal
 
 class UI(ABC):
     """Clase abstracta para la interfaz de usuario en consola.
@@ -12,18 +14,11 @@ class UI(ABC):
     def __new__(cls):
         if cls is UI:
             raise TypeError("No se puede instanciar la clase abstracta UI directamente.")
-        return super().__new__(cls)
-
-    @staticmethod
-    def mostrar_menu_principal():
-        print("=== Menú Principal ===")
-        print("1. Registrarse")
-        print("2. Iniciar sesión")
-        print("3. Salir")
+        return super().__new__(cls)    
     
     @staticmethod
     def ejecutar_menu_principal():
-        UI.mostrar_menu_principal()
+        mostrar_menu_principal()
         opcion = UI.obtener_opcion()
         if opcion == '1':
             usuario = UI.obtener_datos_usuario()
@@ -33,17 +28,20 @@ class UI(ABC):
             return 'Registro completado'
         elif opcion == '2':
             datos = UI.iniciar_sesion()
-            repo = MySQLUsuarioAutorizacionDAO()  # Cambiado a la implementación concreta
-            usuario = repo.autorizar_usuario(datos[0], datos[1])
-            if usuario and usuario.is_auth:
+            repo = MySQLUsuarioAutorizacionDAO() 
+            # TODO: A LO MEJOR FALTE VALIDAR SI ES NONE, cuando hay un error eso devuelve
+            usuario_autenticado = repo.autorizar_usuario(datos[0], datos[1])
+            if usuario_autenticado and usuario_autenticado.is_auth:
                 print("Inicio de sesión exitoso.")
                 # Aquí puedes agregar lógica adicional para el usuario autenticado
-                #Aca deberia llamar a un nuevo menu para otra tarea
+                # Aca deberia llamar a un nuevo menu para otra tarea
                 UI.mostrar_menu_estandar()
                 opcion = UI.obtener_opcion()
                 if opcion == '1':
-                    print(usuario)
+                    print(usuario_autenticado)
                 elif opcion == '2':
+                    repo = MySQLViviendaDAO()
+                    repo.agregar_vivienda()
                     print("Consultando dispositivos...")
                 elif opcion == '3':
                     print("Cerrando sesión...")
@@ -114,6 +112,12 @@ class UI(ABC):
     def mostrar_menu_estandar():
         print("=== Menú Estándar ===")
         print("1. Consultar datos personales.")
-        print("2. Consultar dispositivos")
-        print("3. Cerrar sesión")
-    
+        print("2. Agregar vivienda.")
+        print("3. Consultar dispositivos")
+        print("4. Cerrar sesión")
+
+    @staticmethod
+    def ejecutar_menu_estandar():
+        UI.mostrar_menu_estandar()
+        opcion = UI.obtener_opcion()
+        return opcion
