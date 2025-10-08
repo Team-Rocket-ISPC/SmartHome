@@ -1,9 +1,9 @@
 class TipoDispositivo:
-    def __init__(self, id_tipo: int, nombre: str):
+    def __init__(self, nombre: str, id_tipo: int = None):
         self._id_tipo = None
         self._nombre = None
 
-        self.id_tipo = id_tipo
+        self.id_tipo = id_tipo #puede ser None al crear un nuevo tipo por el autoincremento de la BD
         self.nombre = nombre
 
     # Getter y Setter para id_tipo
@@ -13,8 +13,9 @@ class TipoDispositivo:
 
     @id_tipo.setter
     def id_tipo(self, value):
-        if not isinstance(value, int) or value <= 0:
-            raise ValueError("El id_tipo debe ser un entero positivo.")
+        if value is not None:  # Solo valida si se pasa un valor
+            if not isinstance(value, int) or value <= 0:
+                raise ValueError("El id_tipo debe ser un entero positivo.")
         self._id_tipo = value
 
     # Getter y Setter para nombre

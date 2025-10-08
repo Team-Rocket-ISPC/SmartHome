@@ -1,5 +1,7 @@
 from dao.usuario_dao import UsuarioDAO
+from dao.tipo_dispositivo_dao import DataAccessTipoDispositivoDAO
 from domain.entities.usuario import Usuario
+from domain.entities.tipo_dispositivo import TipoDispositivo
 
 def menu_principal():
     print("\n===== SmartHome Solutions =====")
@@ -133,3 +135,28 @@ def main():
 if __name__ == "__main__":
     main()
 
+"""" PRUEBAS DEL DAO TIPO DISPOSITIVO 
+    #para probar el tipo_dispositivo_dao directamente
+if __name__ == "__main__":
+    dao = DataAccessTipoDispositivoDAO()
+    
+    # Create
+    nuevo_tipo = TipoDispositivo(nombre="Sensor de movimiento")
+    creado = dao.create(nuevo_tipo)
+    print("Creado:", creado.id_tipo, creado.nombre)
+
+    # Get
+    tipo_obtenido = dao.get(5)
+    print(tipo_obtenido.id_tipo, tipo_obtenido.nombre)
+   
+    # Actualizar
+    tipo_obtenido.nombre = "sensor actualizado"
+    dao.update(tipo_obtenido)
+    tipo_actualizado = dao.get(tipo_obtenido.id_tipo)
+    print(tipo_actualizado.nombre)  # Debe decir "sensor actualizado"
+
+    # Borrar
+    dao.delete(tipo_actualizado.id_tipo)
+    tipo_borrado = dao.get(tipo_actualizado.id_tipo)
+    print(tipo_borrado)  # Debe ser None
+    """
