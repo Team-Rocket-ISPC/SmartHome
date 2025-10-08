@@ -22,13 +22,9 @@ class DBConn:
                 database=self.database,
                 port=self.port
             )
-            print("✅ Conexión establecida con la base de datos")
             return conn
         except mysql.connector.Error as e:
             print(f"❌ Error al conectar a la base de datos: {e}")
             return None
 
-# Ejemplo de uso
-if __name__ == "__main__":
-    db = DBConn()
-    connection = db.connect()
+
