@@ -2,6 +2,8 @@ from dao.usuario_dao import UsuarioDAO
 from dao.tipo_dispositivo_dao import DataAccessTipoDispositivoDAO
 from domain.entities.usuario import Usuario
 from domain.entities.tipo_dispositivo import TipoDispositivo
+from dao.dispositivo_dao import DispositivoDAO
+from domain.entities.dispositivo import Dispositivo
 
 def menu_principal():
     print("\n===== SmartHome Solutions =====")
@@ -13,7 +15,7 @@ def menu_principal():
 def menu_usuario_estandar(correo):
     print(f"\n--- Menú Usuario Estándar ({correo}) ---")
     print("1. Consultar mis datos")
-    print("2. Consultar dispositivos (pendiente)")
+    print("2. Consultar dispositivos")
     print("3. Crear vivienda (asignarse como Admin)")
     print("0. Cerrar sesión")
     return input("Seleccione una opción: ")
@@ -95,6 +97,7 @@ def crud_usuarios(usuario_dao):
 
 def main():
     usuario_dao = UsuarioDAO()
+    dao = DispositivoDAO() 
 
     while True:
         opcion = menu_principal()
@@ -119,8 +122,14 @@ def main():
                         u = usuario_dao.get(correo)
                         print(u)
                     elif op_est == "2":
-                        #ESTO APUNTA A TABLA DISPOSITIVO
-                        print("Consulta de dispositivos (pendiente)")
+                        dispositivos = dao.get_all()
+                        if dispositivos:
+                            print("\n📋 Lista de dispositivos:")
+                            for d in dispositivos:
+                                print(d)
+                        else:
+                            print("No hay dispositivos registrados.")
+
                     elif op_est == "3":
                         #ESTO APUNTA A TABLA VIVIENDA
                         print("Creación de vivienda (pendiente)")
@@ -134,6 +143,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 """" PRUEBAS DEL DAO TIPO DISPOSITIVO 
     #para probar el tipo_dispositivo_dao directamente
