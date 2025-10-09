@@ -2,6 +2,9 @@ from dao.usuario_dao import UsuarioDAO
 from dao.tipo_dispositivo_dao import DataAccessTipoDispositivoDAO
 from domain.entities.usuario import Usuario
 from domain.entities.tipo_dispositivo import TipoDispositivo
+from dao.dispositivo_dao import DispositivoDAO
+from domain.entities.dispositivo import Dispositivo
+from datetime import datetime
 
 def menu_principal():
     print("\n===== SmartHome Solutions =====")
@@ -13,7 +16,7 @@ def menu_principal():
 def menu_usuario_estandar(correo):
     print(f"\n--- Menú Usuario Estándar ({correo}) ---")
     print("1. Consultar mis datos")
-    print("2. Consultar dispositivos (pendiente)")
+    print("2. Consultar dispositivos")
     print("3. Crear vivienda (asignarse como Admin)")
     print("0. Cerrar sesión")
     return input("Seleccione una opción: ")
@@ -21,7 +24,8 @@ def menu_usuario_estandar(correo):
 def menu_admin(correo):
     print(f"\n--- Menú Administrador ({correo}) ---")
     print("1. CRUD de usuarios")
-    print("2. Cambiar rol de usuario")
+    print("2. CRUD de dispositivos")
+    print("3. Cambiar rol de usuario")
     print("0. Cerrar sesión")
     return input("Seleccione una opción: ")
 
@@ -93,8 +97,95 @@ def crud_usuarios(usuario_dao):
         else:
             print("Opción inválida.")
 
+def crud_dispositivos(dao: DispositivoDAO):
+    while True:
+        print("\n--- Gestión de dispositivos ---")
+        print("1. Listar dispositivos")
+        print("2. Buscar dispositivo por ID")
+        print("3. Crear dispositivo")
+        print("4. Actualizar dispositivo")
+        print("5. Eliminar dispositivo")
+        print("0. Volver")
+        opcion = input("Opción: ")
+
+        if opcion == "1":
+            dispositivos = dao.get_all()
+            if dispositivos:
+                print("\n📋 Lista de dispositivos:")
+                for d in dispositivos:
+                    print(d)
+            else:
+                print("No hay dispositivos registrados.")
+
+        elif opcion == "2":
+            try:
+                id_disp = int(input("Ingrese ID del dispositivo: "))
+                d = dao.get_by_id(id_disp)
+                print(d if d else "Dispositivo no encontrado.")
+            except ValueError:
+                print("ID inválido.")
+
+        elif opcion == "3":
+            print("\n--- Crear nuevo dispositivo ---")
+            nombre = input("Nombre del dispositivo: ").strip()
+            estado = False  # Por defecto apagado
+            id_tipo = int(input("ID del tipo de dispositivo: "))
+            id_ubicacion = int(input("ID de la ubicación: "))
+            fecha_hora = datetime.now()
+
+            nuevo = Dispositivo(
+                nombre=nombre,
+                estado=estado,
+                fecha_hora=fecha_hora,
+                id_tipo=id_tipo,
+                id_ubicacion=id_ubicacion
+            )
+
+            if dao.create(nuevo):
+                print("✅ Dispositivo registrado correctamente.")
+            else:
+                print("❌ Error al crear el dispositivo.")
+
+        elif opcion == "4":
+            try:
+                id_disp = int(input("Ingrese ID del dispositivo a actualizar: "))
+                d = dao.get_by_id(id_disp)
+                if d:
+                    print(f"Editando {d.nombre}")
+                    d.nombre = input(f"Nuevo nombre ({d.nombre}): ") or d.nombre
+                    estado_input = input(f"Nuevo estado (1=Encendido, 0=Apagado, actual {int(d.estado)}): ")
+                    if estado_input in ["0", "1"]:
+                        d.estado = bool(int(estado_input))
+                    d.id_tipo = int(input(f"Nuevo ID tipo ({d.id_tipo}): ") or d.id_tipo)
+                    d.id_ubicacion = int(input(f"Nuevo ID ubicación ({d.id_ubicacion}): ") or d.id_ubicacion)
+                    d.fecha_hora = datetime.now()
+                    if dao.update(d):
+                        print("✅ Dispositivo actualizado.")
+                    else:
+                        print("❌ Error al actualizar.")
+                else:
+                    print("Dispositivo no encontrado.")
+            except ValueError:
+                print("ID inválido.")
+
+        elif opcion == "5":
+            try:
+                id_disp = int(input("Ingrese ID del dispositivo a eliminar: "))
+                if dao.delete(id_disp):
+                    print("🗑️ Dispositivo eliminado correctamente.")
+                else:
+                    print("❌ Error al eliminar el dispositivo.")
+            except ValueError:
+                print("ID inválido.")
+
+        elif opcion == "0":
+            break
+        else:
+            print("Opción inválida.")
+
 def main():
     usuario_dao = UsuarioDAO()
+    dao = DispositivoDAO()
 
     while True:
         opcion = menu_principal()
@@ -108,10 +199,13 @@ def main():
                     if op_admin == "1":
                         crud_usuarios(usuario_dao)
                     elif op_admin == "2":
-                        #Esto apunta a tabla USUARIO_VIVIENDA
+                        crud_dispositivos(dao)
+                    elif op_admin == "3":
                         print("Cambio de rol (pendiente)")
                     elif op_admin == "0":
                         break
+                    else:
+                        print("Opción inválida.")
             elif rol == "Estandar":
                 while True:
                     op_est = menu_usuario_estandar(correo)
@@ -119,10 +213,14 @@ def main():
                         u = usuario_dao.get(correo)
                         print(u)
                     elif op_est == "2":
-                        #ESTO APUNTA A TABLA DISPOSITIVO
-                        print("Consulta de dispositivos (pendiente)")
+                        dispositivos = dao.get_all()
+                        if dispositivos:
+                            print("\n📋 Lista de dispositivos:")
+                            for d in dispositivos:
+                                print(d)
+                        else:
+                            print("No hay dispositivos registrados.")
                     elif op_est == "3":
-                        #ESTO APUNTA A TABLA VIVIENDA
                         print("Creación de vivienda (pendiente)")
                     elif op_est == "0":
                         break
@@ -132,9 +230,12 @@ def main():
         else:
             print("Opción inválida.")
 
+
 if __name__ == "__main__":
     main()
     
+
+
 
 
 """
