@@ -1,17 +1,14 @@
 from datetime import datetime
 from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
-
 class Automatizacion:
-    ultimo_id = 0  # atributo de clase para autoincremento
-
-    def __init__(self, nombre, hora_inicio, hora_fin):
-        Automatizacion.ultimo_id += 1   # autoincrementar el ID al crear la automatización
-        self.id_automatizacion = Automatizacion.ultimo_id
+    def __init__(self, nombre, id_vivienda, hora_inicio, hora_fin, activa=False, id_automatizacion=None):
+        self.id_automatizacion = id_automatizacion  # Se asigna en la BD. Puede ser None al crear una nueva automatización
         self.nombre = nombre
+        self.id_vivienda = id_vivienda
         self.hora_inicio = hora_inicio  # formato "HH:MM"
         self.hora_fin = hora_fin        # formato "HH:MM"
-        self.activa = False
-        self.objetivos = []  # composición: lista de AutomatizacionObjetivo
+        self.activa = activa
+        self.objetivos = []  # composición: se insertan desde lista de automatizacion_objetivo
 
     def activar(self):
         self.activa = True
