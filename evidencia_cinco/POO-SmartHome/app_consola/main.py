@@ -236,13 +236,10 @@ if __name__ == "__main__":
     
 
 
-<<<<<<< HEAD
 
-"""" PRUEBAS DEL DAO TIPO DISPOSITIVO 
-=======
+
 """
 PRUEBAS DEL DAO TIPO DISPOSITIVO 
->>>>>>> 4cb94e8426921bffd664b6559d5d6f2e33640db7
     #para probar el tipo_dispositivo_dao directamente
 if __name__ == "__main__":
     dao = DataAccessTipoDispositivoDAO()
