@@ -134,12 +134,20 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
 
-"""" PRUEBAS DEL DAO TIPO DISPOSITIVO 
+
+"""
+PRUEBAS DEL DAO TIPO DISPOSITIVO 
     #para probar el tipo_dispositivo_dao directamente
 if __name__ == "__main__":
     dao = DataAccessTipoDispositivoDAO()
     
+    # GET ALL
+    todos_tipos = dao.get_all()
+    for tipo in todos_tipos:
+        print(tipo.id_tipo, tipo.nombre)
+
     # Create
     nuevo_tipo = TipoDispositivo(nombre="Sensor de movimiento")
     creado = dao.create(nuevo_tipo)
@@ -159,4 +167,4 @@ if __name__ == "__main__":
     dao.delete(tipo_actualizado.id_tipo)
     tipo_borrado = dao.get(tipo_actualizado.id_tipo)
     print(tipo_borrado)  # Debe ser None
-    """
+"""
