@@ -1,6 +1,9 @@
 from conn.db_conn import DBConn
 from domain.entities.automatizacion import Automatizacion
 from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
+from domain.entities.tipo_dispositivo import TipoDispositivo
+from domain.entities.ubicacion import Ubicacion
+from dao.automatizacion_objetivo_dao import AutomatizacionObjetivoDAO
 
 class AutomatizacionDAO:
 
@@ -29,30 +32,153 @@ class AutomatizacionDAO:
                 automatizacion.id_automatizacion = cursor.lastrowid
 
                 # Insertar los objetivos asociados
-                for obj in automatizacion.objetivos:
-                    sql_obj = """
-                        INSERT INTO automatizacion_objetivo (id_automatizacion, id_tipo, id_ubicacion)
-                        VALUES (%s, %s, %s)
-                    """
-                    valores_obj = (
-                        automatizacion.id_automatizacion,
-                        obj.id_tipo,
-                        obj.id_ubicacion
-                    )
-                    cursor.execute(sql_obj, valores_obj)
+                if not automatizacion.objetivos:
+                    print("Advertencia: la automatización no tiene objetivos definidos.")
+                else:
+                    for obj in automatizacion.objetivos:
+                        sql_obj = """
+                            INSERT INTO automatizacion_objetivo (id_automatizacion, id_tipo, id_ubicacion)
+                            VALUES (%s, %s, %s)
+                        """
+                        valores_obj = (
+                            automatizacion.id_automatizacion,
+                            obj.id_tipo,
+                            obj.id_ubicacion
+                        )
+                        cursor.execute(sql_obj, valores_obj)
 
                 conn.commit()
-                print("✅ Automatización creada correctamente.")
+                print("Automatización creada correctamente.")
                 return True
 
             except Exception as e:
                 conn.rollback()
-                print(f"❌ Error al crear automatización: {e}")
+                print(f"Error al crear automatización: {e}")
                 return False
        
+    def get(self, id_automatizacion: int) -> Automatizacion | None:
+        with self.__connect_to_mysql() as conn:
+            if not conn:
+                return None
+            try:
+                cursor = conn.cursor(dictionary=True)
+                sql_auto = "SELECT * FROM automatizacion WHERE id_automatizacion = %s"
+                cursor.execute(sql_auto, (id_automatizacion,))
+                row = cursor.fetchone()
+                if not row:
+                    return None
+
+                automatizacion = Automatizacion(
+                    id_automatizacion=row["id_automatizacion"],
+                    nombre=row["nombre"],
+                    id_vivienda=row["id_vivienda"],
+                    hora_inicio=row["hora_inicio"],
+                    hora_fin=row["hora_fin"],
+                    activa=bool(row["activa"]),
+                    objetivos=[]
+                )
+
+                # Reutilizo el DAO de objetivos
+                objetivo_dao = AutomatizacionObjetivoDAO()
+                objetivos = objetivo_dao.get(id_automatizacion)
+                # Asigno la automatización padre a cada objetivo
+                for obj in objetivos:
+                    obj.automatizacion = automatizacion
+                automatizacion.objetivos = objetivos
+                return automatizacion
+
+            except Exception as e:
+                print(f"Error al obtener automatización: {e}")
+                return None
+   
+
+    def get_all(self, id_vivienda: int = None) -> list[Automatizacion]: 
+        with self.__connect_to_mysql() as conn:
+            if not conn:
+                return []
+            try:
+                cursor = conn.cursor()
+                if id_vivienda:              #si pasamos un id vivienda trae solo las de esa vivienda
+                    sql = "SELECT id_automatizacion FROM automatizacion WHERE id_vivienda = %s"
+                    cursor.execute(sql, (id_vivienda,))
+                else:                        #si no pasamos nada trae todas las automatizaciones
+                    sql = "SELECT id_automatizacion FROM automatizacion"
+                    cursor.execute(sql)
+
+                registros = cursor.fetchall()
+                automatizaciones = [self.get(r["id_automatizacion"]) for r in registros if r]
+                return automatizaciones
+          
+            except Exception as e:
+                print(f"Error al obtener automatizaciones: {e}")
+                return []
+            
+    def update(self, automatizacion: Automatizacion) -> bool:
+        with self.__connect_to_mysql() as conn:
+            if not conn:
+                return False
+            try:
+                cursor = conn.cursor()
+                # Pedimos nuevos valores
+                nombre = input("Nuevo nombre de automatizacion (Enter para mantener): ").strip()
+                id_vivienda = input("Nuevo id de vivienda (Enter para mantener): ").strip()
+                hora_inicio = input("Nueva hora de inicio (Enter para mantener): ").strip()
+                hora_fin = input("Nueva hora de fin (Enter para mantener): ").strip()
+                activa = input("Nueva estado (1 para activa, 0 para inactiva) (Enter para mantener): ").strip()
+
+                # Si el usuario no escribió nada, se mantiene el valor anterior
+                if nombre:
+                    automatizacion.nombre = nombre
+                if id_vivienda:
+                    automatizacion.id_vivienda = id_vivienda
+                if hora_inicio:
+                    automatizacion.hora_inicio = hora_inicio
+                if hora_fin:
+                    automatizacion.hora_fin = hora_fin
+                if activa:
+                    automatizacion.activa = bool(int(activa))
+
+                sql = """
+                    UPDATE automatizacion
+                    SET nombre=%s, id_vivienda=%s, hora_inicio=%s, hora_fin=%s, activa=%s
+                    WHERE id_automatizacion=%s
+                """
+                valores = (
+                    automatizacion.nombre,
+                    automatizacion.id_vivienda,
+                    automatizacion.hora_inicio,
+                    automatizacion.hora_fin,
+                    int(automatizacion.activa),
+                    automatizacion.id_automatizacion
+                )
+                cursor.execute(sql, valores)
+                conn.commit()
+                print("Automatización actualizada correctamente.")
+                return True
+
+            except Exception as e:
+                print(f"Error al obtener automatizaciones: {e}")
+                return []
 
     def __connect_to_mysql(self):
 # Conectar a una base de datos MySQL Server
         db = DBConn()
         connection = db.connect()  
         return connection
+    
+"""
+# Ejemplo de uso Create:
+# Se crea la automatización (se pide por consola nombre id vivienda hora inicio y hora fin)
+# auto = Automatizacion("Modo Noche", id_vivienda=1, hora_inicio="22:00", hora_fin="06:00", activa=True)
+# Se agregan los objetivos (aca por consola hay que mostrar los tipos y ubicaciones disponibles para elegir segun id vivienda)
+# Cuando el usuario elija tipo y ubicacion, se crean dichos objetos:
+# obj1 = AutomatizacionObjetivo(auto, tipo_dispositivo=TipoDispositivo(1, "Luz"), ubicacion=Ubicacion(2, "Dormitorio", 1)) 
+# obj2 = AutomatizacionObjetivo(auto, tipo_dispositivo=TipoDispositivo(2, "Aire"), ubicacion=Ubicacion(3, "Living", 1)) 
+# Se guardan los objetivos dentro del objeto automatización 
+# auto.objetivos.append(obj1) 
+# auto.objetivos.append(obj2) 
+# Ahora se envía todo junto al DAO 
+# dao = automatizacion_dao() 
+# dao.create(auto) --> aca auto ya tiene sus objetivos asociados
+
+"""

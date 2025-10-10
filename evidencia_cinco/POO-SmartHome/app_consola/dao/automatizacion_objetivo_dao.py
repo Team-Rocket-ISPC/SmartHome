@@ -3,7 +3,7 @@ from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
 from domain.entities.tipo_dispositivo import TipoDispositivo
 from domain.entities.ubicacion import Ubicacion
 
-class automatizacion_objetivo_dao:
+class AutomatizacionObjetivoDAO:
     def create(self, objetivo: AutomatizacionObjetivo) -> bool:
         with self.__connect_to_mysql() as conn:
             if not conn:
@@ -21,10 +21,10 @@ class automatizacion_objetivo_dao:
                 )
                 cursor.execute(sql, valores)
                 conn.commit()
-                print(f"✅ Objetivo agregado a la automatización {objetivo.automatizacion.nombre}")
+                print(f"Objetivo agregado a la automatización {objetivo.automatizacion.nombre}")
                 return True
             except Exception as e:
-                print(f"❌ Error al crear objetivo: {e}")
+                print(f"Error al crear objetivo: {e}")
                 conn.rollback()
                 return False
    
@@ -48,7 +48,7 @@ class automatizacion_objetivo_dao:
                registros = cursor.fetchall()
 
                for r in registros:
-                    tipo = TipoDispositivo(r["id_tipo"], r["tipo_nombre"])
+                    tipo = TipoDispositivo(r["tipo_nombre"], r["id_tipo"])
                     ubicacion = Ubicacion(r["id_ubicacion"], r["ubicacion_nombre"], None)
                     objetivo = AutomatizacionObjetivo(
                         automatizacion=None,  # No reconstruimos toda la automatización aquí
@@ -59,7 +59,7 @@ class automatizacion_objetivo_dao:
 
                return objetivos
            except Exception as e:
-                print(f"❌ Error al obtener objetivos: {e}")
+                print(f"Error al obtener objetivos: {e}")
                 return []
         
 
@@ -94,7 +94,7 @@ class automatizacion_objetivo_dao:
 
                 return objetivos
            except Exception as e:
-                print(f"❌ Error al obtener objetivos por automatización: {e}")
+                print(f"Error al obtener objetivos por automatización: {e}")
                 return []
 
 
@@ -113,7 +113,7 @@ class automatizacion_objetivo_dao:
                 print("Objetivo eliminado correctamente.")
                 return True
             except Exception as e:
-                print(f"❌ Error al eliminar objetivo: {e}")
+                print(f"Error al eliminar objetivo: {e}")
                 conn.rollback()
                 return False
     

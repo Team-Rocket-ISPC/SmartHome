@@ -5,6 +5,8 @@ from domain.entities.tipo_dispositivo import TipoDispositivo
 from dao.dispositivo_dao import DispositivoDAO
 from domain.entities.dispositivo import Dispositivo
 from datetime import datetime
+from presentation.menu_automatizacion import menu_automatizaciones
+from dao.automatizacion_dao import AutomatizacionDAO
 
 def menu_principal():
     print("\n===== SmartHome Solutions =====")
@@ -25,7 +27,8 @@ def menu_admin(correo):
     print(f"\n--- Menú Administrador ({correo}) ---")
     print("1. CRUD de usuarios")
     print("2. CRUD de dispositivos")
-    print("3. Cambiar rol de usuario")
+    print("3. CRUD de automatizaciones")
+    print("4. Cambiar rol de usuario")
     print("0. Cerrar sesión")
     return input("Seleccione una opción: ")
 
@@ -104,7 +107,8 @@ def crud_dispositivos(dao: DispositivoDAO):
         print("2. Buscar dispositivo por ID")
         print("3. Crear dispositivo")
         print("4. Actualizar dispositivo")
-        print("5. Eliminar dispositivo")
+        print("5. Encender/Apagar dispositivo")
+        print("6. Eliminar dispositivo")
         print("0. Volver")
         opcion = input("Opción: ")
 
@@ -170,6 +174,17 @@ def crud_dispositivos(dao: DispositivoDAO):
 
         elif opcion == "5":
             try:
+                id_disp = int(input("Ingrese ID del dispositivo a encender/apagar: "))
+                d = dao.get_by_id(id_disp)
+                if d:
+                    d.encender_apagar()
+                else:
+                    print("Dispositivo no encontrado.")
+            except ValueError:
+                print("ID inválido.")
+                
+        elif opcion == "6":
+            try:
                 id_disp = int(input("Ingrese ID del dispositivo a eliminar: "))
                 if dao.delete(id_disp):
                     print("🗑️ Dispositivo eliminado correctamente.")
@@ -186,6 +201,7 @@ def crud_dispositivos(dao: DispositivoDAO):
 def main():
     usuario_dao = UsuarioDAO()
     dao = DispositivoDAO()
+    auto_dao = AutomatizacionDAO()
 
     while True:
         opcion = menu_principal()
@@ -201,6 +217,8 @@ def main():
                     elif op_admin == "2":
                         crud_dispositivos(dao)
                     elif op_admin == "3":
+                        menu_automatizaciones(auto_dao)
+                    elif op_admin == "4":
                         print("Cambio de rol (pendiente)")
                     elif op_admin == "0":
                         break
@@ -215,7 +233,7 @@ def main():
                     elif op_est == "2":
                         dispositivos = dao.get_all()
                         if dispositivos:
-                            print("\n📋 Lista de dispositivos:")
+                            print("\nLista de dispositivos:")
                             for d in dispositivos:
                                 print(d)
                         else:

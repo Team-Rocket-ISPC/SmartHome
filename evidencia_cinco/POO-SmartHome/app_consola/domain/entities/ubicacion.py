@@ -4,7 +4,7 @@ class Ubicacion:
         self.id_ubicacion = id_ubicacion
         self.nombre = nombre
         self.id_vivienda = id_vivienda
-        self.dispositivos = [] #Se agrego esta lista para los metodos de dispositivos
+         
     # Getter y Setter de id_ubicacion
     @property
     def id_ubicacion(self):

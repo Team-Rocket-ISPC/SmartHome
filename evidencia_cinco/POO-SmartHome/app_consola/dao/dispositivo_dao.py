@@ -5,6 +5,7 @@ from dao.interfaces.interface_dispositivo_dao import IDataAccessDispositivoDAO
 from datetime import datetime
 import mysql.connector  # Importar la librería para capturar errores específicos
 
+
 class DispositivoDAO(IDataAccessDispositivoDAO):
     # 🔹 Crear un nuevo dispositivo
     def create(self, dispositivo: Dispositivo) -> bool:
@@ -108,7 +109,23 @@ class DispositivoDAO(IDataAccessDispositivoDAO):
                 conexion.rollback()
                 return False
 
-
+    # Actualizar solo el estado del dispositivo (encender/apagar)
+    def update_estado(self, id_dispositivo: int, nuevo_estado: bool) -> bool:
+        with self.__connect_to_mysql() as conexion:
+            try:
+                cursor = conexion.cursor()
+                sql = """
+                    UPDATE DISPOSITIVO
+                    SET estado = %s
+                    WHERE id_dispositivo = %s
+                """
+                cursor.execute(sql, (nuevo_estado, id_dispositivo))
+                conexion.commit()
+                return cursor.rowcount > 0
+            except mysql.connector.Error as e:
+                print(f"[DAO] Error al actualizar estado: {e}")
+                conexion.rollback()
+                return False
     # 🔹 Eliminar un dispositivo
     def delete(self, id_dispositivo: int) -> bool:
         with self.__connect_to_mysql() as conexion:
