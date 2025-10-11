@@ -12,6 +12,7 @@ ENV/
 env/
 env.bak/
 venv.bak/
+requirements.txt
 
 # Configuración de entorno local
 *.env

@@ -6,7 +6,7 @@ import mysql.connector  # Importar la librería para capturar errores específic
 from abc import ABC
 
 class ViviendaDAO(IDataAccessViviendaDAO, ABC):
-
+    """Clase para manejar las operaciones CRUD de Vivienda en la base de datos MySQL."""
     def __connect_to_mysql(self):
         db = DBConn()
         return db.connect()

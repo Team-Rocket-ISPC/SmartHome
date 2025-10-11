@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 class IDataAccessUsuarioDAO(ABC):
+    """Interfaz para las operaciones CRUD de Usuario en la base de datos."""
     @abstractmethod
     def get(self, correo: str):
         pass
@@ -15,4 +16,7 @@ class IDataAccessUsuarioDAO(ABC):
         pass
     @abstractmethod
     def delete(self, object):
+        pass
+    @abstractmethod
+    def cambio_rol(self, correo: str, nuevo_rol: str) -> bool:
         pass

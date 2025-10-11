@@ -9,6 +9,7 @@ from presentation.menu_automatizacion import menu_automatizaciones
 from dao.automatizacion_dao import AutomatizacionDAO
 
 def menu_principal():
+    """Muestra el menú principal y retorna la opción seleccionada."""
     print("\n===== SmartHome Solutions =====")
     print("1. Registrar nuevo usuario")
     print("2. Iniciar sesión")
@@ -16,6 +17,7 @@ def menu_principal():
     return input("Seleccione una opción: ")
 
 def menu_usuario_estandar(correo):
+    """Muestra el menú para el usuario estándar y retorna la opción seleccionada."""
     print(f"\n--- Menú Usuario Estándar ({correo}) ---")
     print("1. Consultar mis datos")
     print("2. Consultar dispositivos")
@@ -24,6 +26,7 @@ def menu_usuario_estandar(correo):
     return input("Seleccione una opción: ")
 
 def menu_admin(correo):
+    """Muestra el menú para el administrador y retorna la opción seleccionada."""
     print(f"\n--- Menú Administrador ({correo}) ---")
     print("1. CRUD de usuarios")
     print("2. CRUD de dispositivos")
@@ -33,6 +36,7 @@ def menu_admin(correo):
     return input("Seleccione una opción: ")
 
 def registrar_usuario(usuario_dao):
+    """Registra un nuevo usuario en el sistema."""
     print("\n--- Registro de nuevo usuario ---")
     correo = input("Correo: ").strip().lower()
     nombres = input("Nombre/s: ")
@@ -46,6 +50,7 @@ def registrar_usuario(usuario_dao):
         print("Error al registrar usuario.")
 
 def iniciar_sesion(usuario_dao):
+    """Inicia sesión de un usuario en el sistema."""
     print("\n--- Inicio de sesión ---")
     correo = input("Correo: ").strip().lower()
     contrasena = input("Contraseña: ")
@@ -63,6 +68,7 @@ def iniciar_sesion(usuario_dao):
         return None, None
 
 def crud_usuarios(usuario_dao):
+    """Función para gestionar el CRUD de usuarios."""
     while True:
         print("\n--- Gestión de usuarios ---")
         print("1. Listar usuarios")
@@ -101,6 +107,7 @@ def crud_usuarios(usuario_dao):
             print("Opción inválida.")
 
 def crud_dispositivos(dao: DispositivoDAO):
+    """Función para gestionar el CRUD de dispositivos."""
     while True:
         print("\n--- Gestión de dispositivos ---")
         print("1. Listar dispositivos")
@@ -199,6 +206,7 @@ def crud_dispositivos(dao: DispositivoDAO):
             print("Opción inválida.")
 
 def main():
+    """Función principal que inicia la aplicación."""
     usuario_dao = UsuarioDAO()
     dao = DispositivoDAO()
     auto_dao = AutomatizacionDAO()

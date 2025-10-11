@@ -5,8 +5,9 @@ from typing import List
 
 
 class UsuarioDAO(IDataAccessUsuarioDAO):
-
+    """Implementa las operaciones CRUD para la entidad Usuario."""
     def get(self, correo: str) -> Usuario:
+        """Obtiene un usuario por su correo."""
         with self.__connect_to_mysql() as conexion:
         
             if not conexion:
@@ -24,6 +25,7 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 return None
      
     def get_all(self) -> List[Usuario]:
+        """Obtiene todos los usuarios de la base de datos."""
         with self.__connect_to_mysql() as conexion:
             if not conexion:
                 return None
@@ -38,6 +40,7 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 return None
 
     def create(self, usuario: Usuario) -> bool:
+        """Crea un nuevo usuario en la base de datos."""
         with self.__connect_to_mysql() as conexion:
             if not conexion:
                 return False
@@ -54,6 +57,10 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 return False
         
     def update(self, usuario: Usuario) -> bool:
+        """Actualiza los datos de un usuario existente.
+        Permite actualizar nombres, apellidos y contraseña.
+        Si el usuario no ingresa un nuevo valor, se mantiene el anterior.
+        """
         with self.__connect_to_mysql() as conexion:
             if not conexion:
                 return False
@@ -89,6 +96,7 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 return False
  
     def delete(self, correo: str) -> bool:
+        """Elimina un usuario dado su correo."""
         with self.__connect_to_mysql() as conexion:
             if not conexion:
                 return False
@@ -101,9 +109,26 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 print(f"[DAO] Error al eliminar usuario: {e}")
                 conexion.rollback()
                 return False
+            
+    def cambio_rol(self, correo: str, nuevo_rol: str) -> bool:
+        """Cambia el rol de un usuario dado su correo."""
+        with self.__connect_to_mysql() as conexion:
+            if not conexion:
+                return False
+            try:
+                cursor = conexion.cursor()
+                sql = "UPDATE usuario SET rol = %s WHERE correo = %s"
+                valores = (nuevo_rol, correo)
+                cursor.execute(sql, valores)
+                conexion.commit()
+                return True
+            except Exception as e:
+                print(f"[DAO] Error al cambiar rol de usuario: {e}")
+                conexion.rollback()
+                return False
           
     def __connect_to_mysql(self):
-# Conectar a una base de datos MySQL Server
+        """Establece una conexión con la base de datos MySQL."""
         db = DBConn()
         connection = db.connect()  
         return connection
