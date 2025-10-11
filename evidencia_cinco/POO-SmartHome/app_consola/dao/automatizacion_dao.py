@@ -42,8 +42,8 @@ class AutomatizacionDAO:
                         """
                         valores_obj = (
                             automatizacion.id_automatizacion,
-                            obj.id_tipo,
-                            obj.id_ubicacion
+                            obj.tipo_dispositivo.id_tipo,
+                            obj.ubicacion.id_ubicacion
                         )
                         cursor.execute(sql_obj, valores_obj)
 
@@ -186,6 +186,28 @@ class AutomatizacionDAO:
             except Exception as e:
                 print(f"Error al obtener automatizaciones: {e}")
                 return []
+
+    def delete(self, id_automatizacion: int) -> bool:
+        with self.__connect_to_mysql() as conn:
+            if not conn:
+                return False
+            try:
+                cursor = conn.cursor()
+                # Primero elimino los objetivos asociados
+                sql_obj = "DELETE FROM automatizacion_objetivo WHERE id_automatizacion = %s"
+                cursor.execute(sql_obj, (id_automatizacion,))
+                if cursor.rowcount == 0:
+                    print("No se encontraron objetivos asociados a la automatización.")
+                # Luego elimino la automatización
+                sql_auto = "DELETE FROM automatizaciones WHERE id_automatizacion = %s"
+                cursor.execute(sql_auto, (id_automatizacion,))
+                conn.commit()
+                print("Automatización eliminada correctamente.")
+                return True
+
+            except Exception as e:
+                print(f"Error al eliminar automatización: {e}")
+                return False
 
     def __connect_to_mysql(self):
 # Conectar a una base de datos MySQL Server

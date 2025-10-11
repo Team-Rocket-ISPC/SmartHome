@@ -12,7 +12,7 @@ class Automatizacion:
         self.objetivos = []  # composición: se insertan desde lista de automatizacion_objetivo
 
     def __str__(self):
-        return f"Automatización(nombre={self.nombre}, id_vivienda={self.id_vivienda}, " \
+        return f"Automatización(ID={self.id_automatizacion}, nombre={self.nombre}, id_vivienda={self.id_vivienda}, " \
                f"hora_inicio={self.hora_inicio}, hora_fin={self.hora_fin}, activa={self.activa})"
     
     def activar(self):

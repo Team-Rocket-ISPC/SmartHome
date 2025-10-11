@@ -1,6 +1,7 @@
 from typing import List, Optional
 from conn.db_conn import DBConn
 from domain.entities.ubicacion import Ubicacion
+from dao.interfaces.interface_ubicacion_dao import IDataAccessUbicacionDAO
 import mysql.connector
 from abc import ABC
 
@@ -51,6 +52,28 @@ class UbicacionDAO(IDataAccessUbicacionDAO, ABC):
                 return ubicaciones
             except mysql.connector.Error as e:
                 print(f"[DAO] Error al obtener ubicaciones: {e}")
+                return []
+    #agregar metodo get_by_vivienda
+
+    def get_by_vivienda(self, id_vivienda: int) -> List[Ubicacion]:
+        """Obtiene una lista de ubicaciones filtradas por id_vivienda."""
+        with self.__connect_to_mysql() as conexion:
+            ubicaciones = []
+            try:
+                cursor = conexion.cursor()
+                cursor.execute("SELECT id_ubicacion, nombre, id_vivienda FROM UBICACION WHERE id_vivienda = %s", (id_vivienda,))
+                filas = cursor.fetchall()
+                for f in filas:
+                    ubicaciones.append(
+                        Ubicacion(
+                            id_ubicacion=f[0],
+                            nombre=f[1],
+                            id_vivienda=f[2]
+                        )
+                    )
+                return ubicaciones
+            except mysql.connector.Error as e:
+                print(f"[DAO] Error al obtener ubicaciones por vivienda: {e}")
                 return []
 
     def get(self, id_ubicacion: int) -> Optional[Ubicacion]:

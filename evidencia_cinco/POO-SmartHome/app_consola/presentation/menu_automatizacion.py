@@ -1,6 +1,6 @@
 from dao.automatizacion_dao import AutomatizacionDAO
 from dao.tipo_dispositivo_dao import DataAccessTipoDispositivoDAO
-#from dao.ubicacion_dao import UbicacionDao  #Falta Crear UbicacionDao
+from dao.ubicacion_dao import UbicacionDAO #Falta Crear UbicacionDao
 from domain.entities.automatizacion import Automatizacion
 from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
 from domain.entities.tipo_dispositivo import TipoDispositivo
@@ -39,6 +39,15 @@ def menu_automatizaciones(auto_dao):
         elif opcion == "3":
             crear_automatizacion(auto_dao)  
 
+        elif opcion == "4":
+            id_auto = int(input("Ingrese el ID de la automatización a modificar: "))
+            auto = auto_dao.get(id_auto)
+            auto_dao.update(auto) 
+
+        elif opcion == "5":
+            id_auto = int(input("Ingrese el ID de la automatización a eliminar: "))
+            auto_dao.delete(id_auto)
+          
         elif opcion == "0":
             break
         else:
@@ -57,7 +66,7 @@ def crear_automatizacion(auto_dao):
 
     print("\n--- Agregar objetivos ---")
     tipo_dao = DataAccessTipoDispositivoDAO()
-    ubic_dao = UbicacionDao() #Falta Crear UbicacionDao
+    ubic_dao = UbicacionDAO()
 
     while True:
         # Mostrar tipos de dispositivo disponibles
@@ -67,7 +76,7 @@ def crear_automatizacion(auto_dao):
             print(f"{t.id_tipo} - {t.nombre}")
 
         id_tipo = int(input("Seleccione el ID de tipo de dispositivo (0 para terminar): "))
-        if id_tipo == 0:
+        if id_tipo == 0: #Si la opcion es 0, hay que dar la opcion de crear un nuevo tipo de dispositivo
             break
 
         # Mostrar ubicaciones disponibles
@@ -80,7 +89,7 @@ def crear_automatizacion(auto_dao):
 
         # Crear los objetos de dominio
         tipo_dao = DataAccessTipoDispositivoDAO()
-        ubic_dao = UbicacionDao()
+        ubic_dao = UbicacionDAO()
 
         tipo = tipo_dao.get(id_tipo)
         ubic = ubic_dao.get(id_ubicacion)
@@ -89,6 +98,7 @@ def crear_automatizacion(auto_dao):
 
         # Crear el objetivo (se agrega solo a auto.objetivos)
         AutomatizacionObjetivo(auto, tipo, ubic)
+        
 
         seguir = input("¿Agregar otro objetivo? (s/n): ").lower()
         if seguir != "s":
