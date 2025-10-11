@@ -1,10 +1,11 @@
 from typing import List, Optional
 from conn.db_conn import DBConn
-from domain.vivienda import Vivienda
-import mysql.connector
+from domain.entities.vivienda import Vivienda
+from dao.interfaces.interface_vivienda_dao import IDataAccessViviendaDAO
+import mysql.connector  # Importar la librería para capturar errores específicos
 from abc import ABC
 
-class ViviendaDAO(IViviendaDAO, ABC):
+class ViviendaDAO(IDataAccessViviendaDAO, ABC):
 
     def __connect_to_mysql(self):
         db = DBConn()

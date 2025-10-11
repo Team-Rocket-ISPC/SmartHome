@@ -26,18 +26,5 @@ class Vivienda:
             raise ValueError("El código postal debe ser un número entero positivo.")
         self._codigo_postal = value
 
-    def crear_vivienda(self, direccion: str, codigo_postal: int):
-        """Crea una nueva vivienda (sin id_vivienda, ya que se asignará automáticamente)."""
-        self.direccion = direccion
-        self.codigo_postal = codigo_postal
-
-    def modificar_vivienda(self, direccion: str = None, codigo_postal: int = None):
-        """Modifica los atributos de la vivienda, si los valores son proporcionados."""
-        if direccion:
-            self.direccion = direccion
-        if codigo_postal:
-            self.codigo_postal = codigo_postal
-
-    def mostrar_datos_vivienda(self):
-        """Devuelve una cadena con los detalles de la vivienda."""
-        return f"Vivienda ID: {self.id_vivienda}, Dirección: {self.direccion}, Código Postal: {self.codigo_postal}"
+    def __str__(self):
+         return f"Vivienda ID: {self.id_vivienda}, Dirección: {self.direccion}, Código Postal: {self.codigo_postal}"

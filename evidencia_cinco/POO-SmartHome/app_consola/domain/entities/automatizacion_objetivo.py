@@ -7,8 +7,11 @@ class AutomatizacionObjetivo:
         self.automatizacion = automatizacion
         self.tipo_dispositivo = tipo_dispositivo
         self.ubicacion = ubicacion
-        automatizacion.objetivos.append(self) 
-    #estos objetivos hay que pedirlos por consola haciendo un get por id vivienda a tipo y ubicacion 
+
+        # Solo agregamos si existe automatización
+        if automatizacion is not None:
+            automatizacion.objetivos.append(self)
+ #estos objetivos hay que pedirlos por consola haciendo un get por id vivienda a tipo y ubicacion 
 
     def __str__(self):
         return f"Tipo: {self.tipo_dispositivo.nombre}, Ubicación: {self.ubicacion.nombre}"    

@@ -36,11 +36,9 @@ class AutomatizacionObjetivoDAO:
            try:
                cursor = conn.cursor(dictionary=True)
                sql = """
-                    SELECT ao.*, a.nombre AS automatizacion_nombre, 
-                        t.id_tipo, t.nombre AS tipo_nombre, 
-                        u.id_ubicacion, u.nombre AS ubicacion_nombre
+                      SELECT ao.*, t.id_tipo, t.nombre AS tipo_nombre,
+                        u.id_ubicacion, u.nombre AS ubicacion_nombre, u.id_vivienda
                     FROM automatizacion_objetivo ao
-                    JOIN automatizacion a ON ao.id_automatizacion = a.id_automatizacion
                     JOIN tipo_dispositivo t ON ao.id_tipo = t.id_tipo
                     JOIN ubicacion u ON ao.id_ubicacion = u.id_ubicacion
                 """
@@ -49,7 +47,7 @@ class AutomatizacionObjetivoDAO:
 
                for r in registros:
                     tipo = TipoDispositivo(r["tipo_nombre"], r["id_tipo"])
-                    ubicacion = Ubicacion(r["id_ubicacion"], r["ubicacion_nombre"], None)
+                    ubicacion = Ubicacion(r["id_ubicacion"], r["ubicacion_nombre"], r["id_vivienda"])
                     objetivo = AutomatizacionObjetivo(
                         automatizacion=None,  # No reconstruimos toda la automatización aquí
                         tipo_dispositivo=tipo,
@@ -70,10 +68,10 @@ class AutomatizacionObjetivoDAO:
            if not conn:
                 return objetivos
            try:
-                cursor = conn.cursor()
+                cursor = conn.cursor(dictionary=True)
                 sql = """
                     SELECT ao.*, t.id_tipo, t.nombre AS tipo_nombre,
-                        u.id_ubicacion, u.nombre AS ubicacion_nombre
+                        u.id_ubicacion, u.nombre AS ubicacion_nombre, u.id_vivienda
                     FROM automatizacion_objetivo ao
                     JOIN tipo_dispositivo t ON ao.id_tipo = t.id_tipo
                     JOIN ubicacion u ON ao.id_ubicacion = u.id_ubicacion
@@ -83,8 +81,8 @@ class AutomatizacionObjetivoDAO:
                 registros = cursor.fetchall()
 
                 for r in registros:
-                    tipo = TipoDispositivo(r["id_tipo"], r["tipo_nombre"])
-                    ubicacion = Ubicacion(r["id_ubicacion"], r["ubicacion_nombre"], None)
+                    tipo = TipoDispositivo(r["tipo_nombre"], r["id_tipo"])
+                    ubicacion = Ubicacion(r["id_ubicacion"], r["ubicacion_nombre"], r["id_vivienda"])
                     objetivo = AutomatizacionObjetivo(
                         automatizacion=None,
                         tipo_dispositivo=tipo,

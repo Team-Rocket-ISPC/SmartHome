@@ -13,8 +13,7 @@ class Automatizacion:
 
     def __str__(self):
         return f"Automatización(nombre={self.nombre}, id_vivienda={self.id_vivienda}, " \
-               f"hora_inicio={self.hora_inicio}, hora_fin={self.hora_fin}, activa={self.activa}, " \
-               f"objetivos={self.objetivos})"
+               f"hora_inicio={self.hora_inicio}, hora_fin={self.hora_fin}, activa={self.activa})"
     
     def activar(self):
         self.activa = True

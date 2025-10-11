@@ -15,7 +15,7 @@ class AutomatizacionDAO:
                 cursor = conn.cursor()
                  # Insertar la automatización principal
                 sql_auto = """
-                    INSERT INTO automatizacion (nombre, id_vivienda, hora_inicio, hora_fin, activa)
+                    INSERT INTO automatizaciones (nombre, id_vivienda, hora_inicio, hora_fin, activa)
                     VALUES (%s, %s, %s, %s, %s)
                 """
                 valores = (
@@ -62,7 +62,7 @@ class AutomatizacionDAO:
                 return None
             try:
                 cursor = conn.cursor(dictionary=True)
-                sql_auto = "SELECT * FROM automatizacion WHERE id_automatizacion = %s"
+                sql_auto = "SELECT * FROM automatizaciones WHERE id_automatizacion = %s"
                 cursor.execute(sql_auto, (id_automatizacion,))
                 row = cursor.fetchone()
                 if not row:
@@ -75,7 +75,6 @@ class AutomatizacionDAO:
                     hora_inicio=row["hora_inicio"],
                     hora_fin=row["hora_fin"],
                     activa=bool(row["activa"]),
-                    objetivos=[]
                 )
 
                 # Reutilizo el DAO de objetivos
@@ -92,26 +91,54 @@ class AutomatizacionDAO:
                 return None
    
 
-    def get_all(self, id_vivienda: int = None) -> list[Automatizacion]: 
+    def get_all(self, id_vivienda: int = None) -> list[Automatizacion]:
+        automatizaciones = []
         with self.__connect_to_mysql() as conn:
             if not conn:
                 return []
             try:
-                cursor = conn.cursor()
-                if id_vivienda:              #si pasamos un id vivienda trae solo las de esa vivienda
-                    sql = "SELECT id_automatizacion FROM automatizacion WHERE id_vivienda = %s"
+                cursor = conn.cursor(dictionary=True)
+
+                # Traigo todas o las filtradas por vivienda
+                if id_vivienda:
+                    sql = "SELECT * FROM automatizaciones WHERE id_vivienda = %s"
                     cursor.execute(sql, (id_vivienda,))
-                else:                        #si no pasamos nada trae todas las automatizaciones
-                    sql = "SELECT id_automatizacion FROM automatizacion"
+                else:
+                    sql = "SELECT * FROM automatizaciones"
                     cursor.execute(sql)
 
                 registros = cursor.fetchall()
-                automatizaciones = [self.get(r["id_automatizacion"]) for r in registros if r]
+
+                for r in registros:
+                    # Creo la automatización
+                    auto = Automatizacion(
+                        id_automatizacion=r["id_automatizacion"],
+                        nombre=r["nombre"],
+                        id_vivienda=r["id_vivienda"],
+                        hora_inicio=r["hora_inicio"],
+                        hora_fin=r["hora_fin"],
+                        activa=bool(r["activa"])
+                    )
+
+                    # Traigo los objetivos asociados
+                    objetivo_dao = AutomatizacionObjetivoDAO()
+                    objetivos = objetivo_dao.get(r["id_automatizacion"])
+
+                    # Asigno correctamente los objetivos a la automatización
+                    auto.objetivos = []
+                    for obj in objetivos:
+                        obj.automatizacion = auto  # Reasigno referencia
+                        auto.objetivos.append(obj)
+
+                    automatizaciones.append(auto)
+
                 return automatizaciones
-          
+
             except Exception as e:
                 print(f"Error al obtener automatizaciones: {e}")
                 return []
+          
+           
             
     def update(self, automatizacion: Automatizacion) -> bool:
         with self.__connect_to_mysql() as conn:
@@ -139,7 +166,7 @@ class AutomatizacionDAO:
                     automatizacion.activa = bool(int(activa))
 
                 sql = """
-                    UPDATE automatizacion
+                    UPDATE automatizaciones
                     SET nombre=%s, id_vivienda=%s, hora_inicio=%s, hora_fin=%s, activa=%s
                     WHERE id_automatizacion=%s
                 """

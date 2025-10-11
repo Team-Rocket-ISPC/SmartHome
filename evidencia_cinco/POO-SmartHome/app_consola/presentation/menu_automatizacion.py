@@ -36,6 +36,9 @@ def menu_automatizaciones(auto_dao):
             else:
                 print("No hay automatizaciones para esa vivienda.")
 
+        elif opcion == "3":
+            crear_automatizacion(auto_dao)  
+
         elif opcion == "0":
             break
         else:
@@ -94,22 +97,3 @@ def crear_automatizacion(auto_dao):
     dao = AutomatizacionDAO()
     dao.create(auto)
 
-def listar_automatizaciones(auto_dao):
-    print("\n--- Listado de automatizaciones ---")
-    id_vivienda = int(input("Ingrese el ID de la vivienda para filtrar (solo enter para ver todas): "))
-   
-
-    if not automatizaciones:
-        print("No hay automatizaciones registradas.")
-        return
-
-    for a in automatizaciones:
-        estado = "Activa" if a.activa else "Inactiva"
-        print(f"ID: {a.id_automatizacion}, Nombre: {a.nombre}, Vivienda: {a.id_vivienda}, "
-              f"Horario: {a.hora_inicio} - {a.hora_fin}, Estado: {estado}")
-        if a.objetivos:
-            print("  Objetivos:")
-            for obj in a.objetivos:
-                print(f"    - Tipo: {obj.tipo_dispositivo.nombre}, Ubicación: {obj.ubicacion.nombre}")
-        else:
-            print("  No tiene objetivos definidos.")

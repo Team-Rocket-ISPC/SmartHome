@@ -16,6 +16,10 @@ class IDataAccessDispositivoDAO(ABC):
     @abstractmethod
     def update(self, object):
         pass
+    
+    @abstractmethod
+    def update_estado(self, id_dispositivo: int, estado: bool) -> bool:
+        pass
 
     @abstractmethod
     def delete(self, object):
