@@ -54,9 +54,9 @@ def iniciar_sesion(usuario_dao):
     print("\n--- Inicio de sesión ---")
     correo = input("Correo: ").strip().lower()
     contrasena = input("Contraseña: ")
-    usuario = usuario_dao.get(correo)
+    usuario = usuario_dao.get(correo, contrasena)
 
-    if usuario and usuario.contrasena == contrasena:
+    if usuario:
         print(f"Bienvenido {usuario.nombres}!")
         # acá verificar roles asociados más adelante
         if correo == "cristian@gmail.com":  # admin global
