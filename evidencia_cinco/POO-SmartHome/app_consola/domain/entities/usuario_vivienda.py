@@ -1,5 +1,6 @@
 
 class UsuarioVivienda:
+    """Clase que representa la relación entre un usuario y una vivienda en el sistema SmartHome."""
     ROLES_VALIDOS = {"Admin", "Estandar"}
 
     def __init__(self, correo, id_vivienda, rol):
