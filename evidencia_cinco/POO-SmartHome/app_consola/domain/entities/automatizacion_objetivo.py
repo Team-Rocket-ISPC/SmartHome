@@ -1,4 +1,4 @@
-from domain.entities.dispositivo import Dispositivo
+from domain.entities.automatizacion import Automatizacion
 from domain.entities.ubicacion import Ubicacion 
 from domain.entities.tipo_dispositivo import TipoDispositivo 
 
@@ -11,7 +11,38 @@ class AutomatizacionObjetivo:
         # Solo agregamos si existe automatización
         if automatizacion is not None:
             automatizacion.objetivos.append(self)
- #estos objetivos hay que pedirlos por consola haciendo un get por id vivienda a tipo y ubicacion 
+        # estos objetivos hay que pedirlos por consola haciendo un get por id vivienda a tipo y ubicacion 
+
+    @property
+    def automatizacion(self):
+        return self._automatizacion
+
+    @automatizacion.setter
+    def automatizacion(self, valor):
+        if not isinstance(valor, Automatizacion):
+            raise TypeError("Debe ser un objeto de tipo Automatizacion")
+        self._automatizacion = valor
+
+    @property
+    def tipo_dispositivo(self):
+        return self._tipo_dispositivo
+
+    @tipo_dispositivo.setter
+    def tipo_dispositivo(self, valor):
+        if not isinstance(valor, TipoDispositivo):
+            raise TypeError("Debe ser un objeto de tipo TipoDispositivo")
+        self._tipo_dispositivo = valor
+
+    @property
+    def ubicacion(self):
+        return self._ubicacion
+
+    @ubicacion.setter
+    def ubicacion(self, valor):
+        if not isinstance(valor, Ubicacion):
+            raise TypeError("Debe ser un objeto de tipo Ubicacion")
+        self._ubicacion = valor
+
 
     def __str__(self):
         return f"Tipo: {self.tipo_dispositivo.nombre}, Ubicación: {self.ubicacion.nombre}"    

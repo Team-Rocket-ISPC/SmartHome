@@ -1,58 +1,72 @@
 import pytest
-from domain.entities.dispositivo import Dispositivo
 from domain.entities.automatizacion import Automatizacion
+from domain.entities.tipo_dispositivo import TipoDispositivo
+from domain.entities.ubicacion import Ubicacion
 from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
 
-# Dummy Ubicacion para los tests
-class DummyUbicacion:
-    def __init__(self, nombre):
-        self.nombre = nombre
-        self.dispositivos = []
-
-# Dummy TipoDispositivo para los tests
-class DummyTipoDispositivo:
-    def __init__(self, id_tipo):
-        self.id_tipo = id_tipo
-
-# Fixtures
+# ------------------------------
+# objetos válidos
 @pytest.fixture
-def ubicacion():
-    return DummyUbicacion("Cocina")
+def automatizacion_valida():
+    return Automatizacion("Modo Vacaciones", 1, "08:00", "20:00")
 
 @pytest.fixture
-def tipo_dispositivo():
-    return DummyTipoDispositivo(1)
+def tipo_dispositivo_valido():
+    return TipoDispositivo("Luz")
 
 @pytest.fixture
-def dispositivo(ubicacion, tipo_dispositivo):
-    return Dispositivo.agregar_dispositivo("Luz Cocina", tipo_dispositivo, ubicacion)
+def ubicacion_valida():
+    return Ubicacion(id_ubicacion=1, nombre="Living", id_vivienda=1)
 
-@pytest.fixture
-def automatizacion():
-    return Automatizacion("Modo Vacaciones", "00:00", "23:59")
+# ------------------------------
+# Test creación correcta
+def test_creacion_correcta(automatizacion_valida, tipo_dispositivo_valido, ubicacion_valida):
+    ao = AutomatizacionObjetivo(automatizacion_valida, tipo_dispositivo_valido, ubicacion_valida)
+    assert ao.automatizacion == automatizacion_valida
+    assert ao.tipo_dispositivo == tipo_dispositivo_valido
+    assert ao.ubicacion == ubicacion_valida
 
-@pytest.fixture
-def objetivo(automatizacion, tipo_dispositivo, ubicacion):
-    return AutomatizacionObjetivo(automatizacion, tipo_dispositivo, ubicacion)
+# ------------------------------
+# Test errores por tipos inválidos
+def test_automatizacion_invalida(tipo_dispositivo_valido, ubicacion_valida):
+    with pytest.raises(TypeError):
+        AutomatizacionObjetivo("no es automatizacion", tipo_dispositivo_valido, ubicacion_valida)
 
-# Tests
-def test_objetivo_se_agrega_a_automatizacion(objetivo, automatizacion):
-    assert objetivo in automatizacion.objetivos
+def test_tipo_dispositivo_invalido(automatizacion_valida, ubicacion_valida):
+    with pytest.raises(TypeError):
+        AutomatizacionObjetivo(automatizacion_valida, "no es tipo_dispositivo", ubicacion_valida)
 
-def test_aplicar_en_cambia_estado_dispositivo(objetivo, dispositivo):
-    # dispositivo inicial apagado
-    assert dispositivo.estado is False
-    objetivo.aplicar_en()
-    assert dispositivo.estado is True
-    # volver a aplicar para apagar
-    objetivo.aplicar_en()
-    assert dispositivo.estado is False
+def test_ubicacion_invalida(automatizacion_valida, tipo_dispositivo_valido):
+    with pytest.raises(TypeError):
+        AutomatizacionObjetivo(automatizacion_valida, tipo_dispositivo_valido, "no es ubicacion")
 
-def test_aplicar_en_no_afecta_dispositivos_diferentes(objetivo, ubicacion):
-    # agregamos otro dispositivo de tipo distinto
-    tipo_otro = DummyTipoDispositivo(2)
-    disp_otro = Dispositivo.agregar_dispositivo("Aire Acondicionado", tipo_otro, ubicacion)
-    # aplicar objetivo
-    objetivo.aplicar_en()
-    # el dispositivo de tipo diferente no debe cambiar
-    assert disp_otro.estado is False
+# ------------------------------
+# Test setters después de creación
+def test_setters_correctos(automatizacion_valida, tipo_dispositivo_valido, ubicacion_valida):
+    ao = AutomatizacionObjetivo(automatizacion_valida, tipo_dispositivo_valido, ubicacion_valida)
+    
+    # Crear objetos nuevos válidos
+    nueva_auto = Automatizacion("Modo Normal", 2, "09:00", "18:00")
+    nuevo_disp = TipoDispositivo("Cafetera")
+    nueva_ubi = Ubicacion(1, "Cocina", 1)
+
+    ao.automatizacion = nueva_auto
+    ao.tipo_dispositivo = nuevo_disp
+    ao.ubicacion = nueva_ubi
+
+    assert ao.automatizacion == nueva_auto
+    assert ao.tipo_dispositivo == nuevo_disp
+    assert ao.ubicacion == nueva_ubi
+
+def test_setters_invalidos(automatizacion_valida, tipo_dispositivo_valido, ubicacion_valida):
+    ao = AutomatizacionObjetivo(automatizacion_valida, tipo_dispositivo_valido, ubicacion_valida)
+
+    with pytest.raises(TypeError):
+        ao.automatizacion = "error"
+
+    with pytest.raises(TypeError):
+        ao.tipo_dispositivo = 123
+
+    with pytest.raises(TypeError):
+        ao.ubicacion = None
+
