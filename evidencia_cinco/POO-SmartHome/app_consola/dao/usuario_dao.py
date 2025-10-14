@@ -6,7 +6,7 @@ from typing import List
 
 class UsuarioDAO(IDataAccessUsuarioDAO):
     """Implementa las operaciones CRUD para la entidad Usuario."""
-    def get(self, correo: str, contrasena: str) -> Usuario:
+    def get_contrasena(self, correo: str, contrasena: str) -> Usuario:
         """Obtiene un usuario por su correo y contraseña."""
         with self.__connect_to_mysql() as conexion:
         
@@ -15,6 +15,23 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
             try:
                 cursor = conexion.cursor()
                 cursor.execute("SELECT * FROM usuario WHERE correo = %s AND contrasena = %s", (correo, contrasena))
+                fila = cursor.fetchone()        
+                if fila:
+                    return Usuario(fila[0], fila[1], fila[2], fila[3])
+                return None
+            except Exception as e:
+                print(f"[DAO] Error al obtener usuario: {e}")
+                return None
+            
+    def get(self, correo: str) -> Usuario:
+        """Obtiene un usuario por su correo."""
+        with self.__connect_to_mysql() as conexion:
+        
+            if not conexion:
+                return None
+            try:
+                cursor = conexion.cursor()
+                cursor.execute("SELECT * FROM usuario WHERE correo = %s", (correo,))
                 fila = cursor.fetchone()        
                 if fila:
                     return Usuario(fila[0], fila[1], fila[2], fila[3])

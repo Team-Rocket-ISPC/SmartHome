@@ -23,7 +23,6 @@ def menu_usuario_estandar(correo):
     print(f"\n--- Menú Usuario Estándar ({correo}) ---")
     print("1. Consultar mis datos")
     print("2. Consultar dispositivos")
-    print("3. Crear vivienda (asignarse como Admin)")
     print("0. Cerrar sesión")
     return input("Seleccione una opción: ")
 
@@ -51,23 +50,34 @@ def registrar_usuario(usuario_dao):
     else:
         print("Error al registrar usuario.")
 
-def iniciar_sesion(usuario_dao):
-    """Inicia sesión de un usuario en el sistema."""
+def iniciar_sesion(usuario_dao, usuario_vivienda_dao, id_vivienda_actual=None):
+    """Inicia sesión de un usuario en el sistema, devolviendo su rol según usuario_vivienda."""
     print("\n--- Inicio de sesión ---")
     correo = input("Correo: ").strip().lower()
     contrasena = input("Contraseña: ")
-    usuario = usuario_dao.get(correo, contrasena)
 
+    # Verificar credenciales
+    usuario = usuario_dao.get_contrasena(correo, contrasena)
     if usuario:
         print(f"Bienvenido {usuario.nombres}!")
-        # acá verificar roles asociados más adelante
-        if correo == "cristian@gmail.com":  # admin global
-            return "Admin", correo
-        else:
+
+        # Obtener rol desde UsuarioVivienda
+        uv = usuario_vivienda_dao.get(correo)
+        if not uv:
+            print("No hay rol asignado a este usuario en ninguna vivienda. Asignando rol 'Estandar' por defecto.")
             return "Estandar", correo
+
+        # Si pasamos id_vivienda_actual, filtramos por esa vivienda
+        if id_vivienda_actual is not None and uv.id_vivienda != id_vivienda_actual:
+            print(f"El usuario no tiene rol en la vivienda {id_vivienda_actual}.")
+            return None, None
+
+        rol = uv.rol
+        return rol, correo
     else:
         print("Credenciales incorrectas.")
         return None, None
+
 
 def crud_usuarios(usuario_dao):
     """Función para gestionar el CRUD de usuarios."""
@@ -219,7 +229,7 @@ def main():
         if opcion == "1":
             registrar_usuario(usuario_dao)
         elif opcion == "2":
-            rol, correo = iniciar_sesion(usuario_dao)
+            rol, correo = iniciar_sesion(usuario_dao,usuario_vivienda_dao)
             if rol == "Admin":
                 while True:
                     op_admin = menu_admin(correo)
@@ -255,8 +265,6 @@ def main():
                                 print(d)
                         else:
                             print("No hay dispositivos registrados.")
-                    elif op_est == "3":
-                        print("Creación de vivienda (pendiente)")
                     elif op_est == "0":
                         break
         elif opcion == "0":

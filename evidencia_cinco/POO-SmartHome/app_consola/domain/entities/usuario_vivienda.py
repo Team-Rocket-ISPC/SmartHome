@@ -3,7 +3,7 @@ class UsuarioVivienda:
     """Clase que representa la relación entre un usuario y una vivienda en el sistema SmartHome."""
     ROLES_VALIDOS = {"Admin", "Estandar"}
 
-    def __init__(self, correo, id_vivienda, rol):
+    def __init__(self, correo, rol, id_vivienda=None):
         self.correo = correo
         self.id_vivienda = id_vivienda
         self.rol = rol
@@ -32,7 +32,11 @@ class UsuarioVivienda:
         return self._id_vivienda
 
     @id_vivienda.setter
-    def id_vivienda(self, value: int):
+    def id_vivienda(self, value: int | None):
+        if value is None:
+            self._id_vivienda = None
+            return
+
         if not isinstance(value, int):
             raise TypeError("El id de la vivienda debe ser un entero")
         if value < 0:

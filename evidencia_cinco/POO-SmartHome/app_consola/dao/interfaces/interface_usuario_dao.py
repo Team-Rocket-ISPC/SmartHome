@@ -4,6 +4,9 @@ from domain.entities.usuario import Usuario
 class IDataAccessUsuarioDAO(ABC):
     """Interfaz para las operaciones CRUD de Usuario en la base de datos."""
     @abstractmethod
+    def get_contrasena(self, correo: str, contrasena: str) -> Usuario:
+        pass    
+    @abstractmethod
     def get(self, correo: str, contrasena: str) -> Usuario:
         pass
     @abstractmethod

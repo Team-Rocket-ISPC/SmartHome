@@ -13,8 +13,8 @@ class UsuarioViviendaDAO(IDataAccessUsuarioViviendaDAO):
                 if not conexion:
                     return False
                 cursor = conexion.cursor()
-                query = "INSERT INTO usuario_vivienda (usuario_id, vivienda_id) VALUES (%s, %s)"
-                values = (usuario_vivienda.usuario_id, usuario_vivienda.vivienda_id)
+                query = "INSERT INTO usuario_vivienda (correo, rol, id_vivienda) VALUES (%s, %s, %s)"
+                values = (usuario_vivienda.correo, usuario_vivienda.rol, usuario_vivienda.id_vivienda)
                 cursor.execute(query, values)
                 conexion.commit()
             return True
@@ -33,7 +33,7 @@ class UsuarioViviendaDAO(IDataAccessUsuarioViviendaDAO):
                 cursor.execute(query, (correo,))
                 result = cursor.fetchone()
                 if result:
-                    return UsuarioVivienda(id=result[0], usuario_id=result[1], vivienda_id=result[2])
+                    return UsuarioVivienda(correo=result[0], rol=result[2], id_vivienda=result[1])
             return None
         except Exception as e:
             print(f"Error al obtener UsuarioVivienda: {e}")
