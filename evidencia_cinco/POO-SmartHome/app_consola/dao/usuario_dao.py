@@ -108,26 +108,6 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 print(f"[DAO] Error al eliminar usuario: {e}")
                 conexion.rollback()
                 return False
-            
-    def cambio_rol(self, correo: str, nuevo_rol: str) -> bool:
-        """Cambia el rol de un usuario dado su correo."""
-        with self.__connect_to_mysql() as conexion:
-            if not conexion:
-                return False
-            try:
-                cursor = conexion.cursor()
-                sql = "UPDATE usuario_vivienda SET rol = %s WHERE correo = %s"
-                valores = (nuevo_rol, correo)
-                res = cursor.execute(sql, valores)
-                if res == 0:
-                    print("[DAO] No se encontró el usuario para cambiar el rol.")
-                    return False
-                conexion.commit()
-                return True
-            except Exception as e:
-                print(f"[DAO] Error al cambiar rol de usuario: {e}")
-                conexion.rollback()
-                return False
           
     def __connect_to_mysql(self):
         """Establece una conexión con la base de datos MySQL."""

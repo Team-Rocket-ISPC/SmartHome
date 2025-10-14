@@ -18,6 +18,4 @@ class IDataAccessUsuarioDAO(ABC):
     @abstractmethod
     def delete(self, correo: str) -> bool:
         pass
-    @abstractmethod
-    def cambio_rol(self, correo: str, nuevo_rol: str) -> bool:
-        pass
+    

@@ -7,6 +7,8 @@ from domain.entities.dispositivo import Dispositivo
 from datetime import datetime
 from presentation.menu_automatizacion import menu_automatizaciones
 from dao.automatizacion_dao import AutomatizacionDAO
+from dao.usuario_vivienda_dao import UsuarioViviendaDAO
+
 
 def menu_principal():
     """Muestra el menú principal y retorna la opción seleccionada."""
@@ -210,6 +212,7 @@ def main():
     usuario_dao = UsuarioDAO()
     dao = DispositivoDAO()
     auto_dao = AutomatizacionDAO()
+    usuario_vivienda_dao = UsuarioViviendaDAO()
 
     while True:
         opcion = menu_principal()
@@ -227,7 +230,13 @@ def main():
                     elif op_admin == "3":
                         menu_automatizaciones(auto_dao)
                     elif op_admin == "4":
-                        print("Cambio de rol (pendiente)")
+                        correo = input("Ingrese el correo del usuario para cambiar su rol: ").strip().lower()
+                        nuevo_rol = input("Ingrese el nuevo rol (Admin/Estandar): ").strip()
+                        if nuevo_rol not in ["Admin", "Estandar"]:
+                            print("Rol inválido. Use 'Admin' o 'Estandar'.")
+                        else:
+                            if usuario_vivienda_dao.cambio_rol(correo, nuevo_rol):
+                                print(f"Rol de {correo} cambiado a {nuevo_rol}.")
                     elif op_admin == "0":
                         break
                     else:
