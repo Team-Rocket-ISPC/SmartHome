@@ -1,46 +1,46 @@
 import pytest
+from datetime import datetime
 from domain.entities.dispositivo import Dispositivo
 
-# Clase dummy que simula la Ubicacion
-class DummyUbicacion:
-    def __init__(self, nombre):
-        self.nombre = nombre
-        self.dispositivos = []
+# ------------------------------
+# Tests para nombre
+def test_nombre_valido():
+    d = Dispositivo("Luz Living", True, datetime(2025, 10, 14, 10, 0))
+    assert d.nombre == "Luz Living"
 
-# Clase dummy que simula TipoDispositivo
-class DummyTipoDispositivo:
-    def __init__(self):
-        self.id_tipo = 1
+def test_nombre_invalido_corto():
+    with pytest.raises(ValueError):
+        Dispositivo("A", True, datetime(2025, 10, 14, 10, 0))
 
-@pytest.fixture
-def ubicacion():
-    return DummyUbicacion("Cocina")
+def test_nombre_invalido_tipo():
+    with pytest.raises(ValueError):
+        Dispositivo(123, True, datetime(2025, 10, 14, 10, 0))
 
-@pytest.fixture
-def tipo_dispositivo():
-    return DummyTipoDispositivo()
+# ------------------------------
+# Tests para estado
+def test_estado_valido_true():
+    d = Dispositivo("Luz", True, datetime(2025, 10, 14, 10, 0))
+    assert d.estado is True
 
-def test_agregar_dispositivo(ubicacion, tipo_dispositivo):
-    disp = Dispositivo.agregar_dispositivo("Luz Cocina", tipo_dispositivo, ubicacion)
-    assert disp.nombre == "Luz Cocina"
-    assert disp.id_tipo == tipo_dispositivo.id_tipo
-    assert disp.ubicacion == ubicacion
-    assert disp in ubicacion.dispositivos
+def test_estado_valido_false():
+    d = Dispositivo("Luz", False, datetime(2025, 10, 14, 10, 0))
+    assert d.estado is False
 
-def test_eliminar_dispositivo(ubicacion, tipo_dispositivo):
-    disp = Dispositivo.agregar_dispositivo("Luz Cocina", tipo_dispositivo, ubicacion)
-    disp.eliminar_dispositivo()
-    assert disp not in ubicacion.dispositivos
+def test_estado_invalido_tipo():
+    with pytest.raises(ValueError):
+        Dispositivo("Luz", "on", datetime(2025, 10, 14, 10, 0))
 
-def test_modificar_dispositivo(ubicacion, tipo_dispositivo):
-    disp = Dispositivo.agregar_dispositivo("Luz Cocina", tipo_dispositivo, ubicacion)
-    disp.modificar_dispositivo("Luz Comedor")
-    assert disp.nombre == "Luz Comedor"
+# ------------------------------
+# Tests para fecha_hora
+def test_fecha_hora_valida():
+    dt = datetime(2025, 10, 14, 10, 0)
+    d = Dispositivo("Luz", True, dt)
+    assert d.fecha_hora == dt
 
-def test_encender_apagar(ubicacion, tipo_dispositivo):
-    disp = Dispositivo.agregar_dispositivo("Luz Cocina", tipo_dispositivo, ubicacion)
-    estado_inicial = disp.estado
-    disp.encender_apagar()
-    assert disp.estado != estado_inicial
-    disp.encender_apagar()
-    assert disp.estado == estado_inicial
+def test_fecha_hora_invalida_tipo_str():
+    with pytest.raises(ValueError):
+        Dispositivo("Luz", True, "2025-10-14 10:00")
+
+def test_fecha_hora_invalida_tipo_int():
+    with pytest.raises(ValueError):
+        Dispositivo("Luz", True, 123456)
