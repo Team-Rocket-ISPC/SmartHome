@@ -15,6 +15,71 @@ class Automatizacion:
         return f"Automatización(ID={self.id_automatizacion}, nombre={self.nombre}, id_vivienda={self.id_vivienda}, " \
                f"hora_inicio={self.hora_inicio}, hora_fin={self.hora_fin}, activa={self.activa})"
     
+    @property
+    def nombre(self):
+        return self._nombres
+
+    @nombre.setter
+    def nombre(self, value):
+        if not value or len(value) < 3:
+            raise ValueError("El nombre debe tener al menos 3 caracteres")
+        self._nombre = value
+
+    @property
+    def id_vivienda(self):
+        return self._id_vivienda
+
+    @id_vivienda.setter
+    def id_vivienda(self, value: int):
+        if not isinstance(value, int):
+            raise TypeError("Debe ser entero")
+        elif value < 0:
+            raise ValueError("El id de la vivienda no puede ser negativo")
+        self._id_vivienda = value
+
+    @property
+    def hora_inicio(self):
+        return self._hora_inicio    
+
+    @hora_inicio.setter
+    def hora_inicio(self, valor):
+        if not isinstance(valor, str) or len(valor.split(":")) != 2: #esto verifica que haya 2 terminos separados por ":"
+            raise ValueError("La hora de inicio debe estar en formato 'HH:MM'")
+        horas, minutos = valor.split(":")
+        if not (horas.isdigit() and minutos.isdigit()): #esto verifica que ambos terminos sean numeros str
+            raise ValueError("La hora de inicio debe contener solo números y ':'")
+        horas, minutos = int(horas), int(minutos)
+        if not (0 <= horas <= 23 and 0 <= minutos <= 59): 
+            raise ValueError("La hora de inicio debe estar entre 00:00 y 23:59")
+        self._hora_inicio = valor
+
+    @property
+    def hora_fin(self):
+        return self._hora_fin
+
+    @hora_fin.setter
+    def hora_fin(self, valor):
+        if not isinstance(valor, str) or len(valor.split(":")) != 2:
+            raise ValueError("La hora de fin debe estar en formato 'HH:MM'")
+        horas, minutos = valor.split(":")
+        if not (horas.isdigit() and minutos.isdigit()):
+            raise ValueError("La hora de fin debe contener solo números y ':'")
+        horas, minutos = int(horas), int(minutos)
+        if not (0 <= horas <= 23 and 0 <= minutos <= 59):
+            raise ValueError("La hora de fin debe estar entre 00:00 y 23:59")
+        self._hora_fin = valor
+
+    @property
+    def activa(self):
+        return self._activa
+
+    @activa.setter
+    def activa(self, valor):
+        if not isinstance(valor, bool):
+            raise ValueError("El atributo 'activa' debe ser True o False.")
+        self._activa = valor
+        
+#-----------------------------------------------------------------------------------------#    
     def activar(self):
         self.activa = True
         print(f"Automatización '{self.nombre}' ACTIVADA")
