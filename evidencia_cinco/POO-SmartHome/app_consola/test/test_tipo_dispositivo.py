@@ -2,7 +2,7 @@ import pytest
 from domain.entities.tipo_dispositivo import TipoDispositivo
 
 def test_crear_tipo_dispositivo_valido():
-    tipo = TipoDispositivo(1, "Sensor")
+    tipo = TipoDispositivo("Sensor", 1)
     assert tipo.id_tipo == 1
     assert tipo.nombre == "Sensor"
 
