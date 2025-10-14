@@ -1,4 +1,4 @@
-
+from typing import Optional
 
 class Vivienda:
     def __init__(self, direccion: str, codigo_postal: int, id_vivienda: Optional[int] = None):
