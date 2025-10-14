@@ -9,6 +9,7 @@ class UsuarioViviendaDAO(IDataAccessUsuarioViviendaDAO):
         self.db_connection = db_connection
 
     def create(self, usuario_vivienda : UsuarioVivienda) -> bool:
+        """Crea un nuevo registro de UsuarioVivienda en la base de datos."""
         try:
             cursor = self.db_connection.cursor()
             query = "INSERT INTO usuario_vivienda (usuario_id, vivienda_id) VALUES (%s, %s)"
@@ -20,11 +21,12 @@ class UsuarioViviendaDAO(IDataAccessUsuarioViviendaDAO):
             print(f"Error al crear UsuarioVivienda: {e}")
             return False
 
-    def get(self, id) -> UsuarioVivienda:
+    def get(self, correo: str) -> UsuarioVivienda:
+        """Obtiene un registro de UsuarioVivienda por su correo."""
         try:
             cursor = self.db_connection.cursor()
-            query = "SELECT * FROM usuario_vivienda WHERE id = %s"
-            cursor.execute(query, (id,))
+            query = "SELECT * FROM usuario_vivienda WHERE correo = %s"
+            cursor.execute(query, (correo,))
             result = cursor.fetchone()
             if result:
                 return UsuarioVivienda(id=result[0], usuario_id=result[1], vivienda_id=result[2])
@@ -33,11 +35,12 @@ class UsuarioViviendaDAO(IDataAccessUsuarioViviendaDAO):
             print(f"Error al obtener UsuarioVivienda: {e}")
             return None
 
-    def update(self, id, usuario_vivienda : UsuarioVivienda) -> bool:
+    def update(self, correo: str, usuario_vivienda: UsuarioVivienda) -> bool:
+        """Actualiza un registro de UsuarioVivienda en la base de datos."""
         try:
             cursor = self.db_connection.cursor()
-            query = "UPDATE usuario_vivienda SET usuario_id = %s, vivienda_id = %s WHERE id = %s"
-            values = (usuario_vivienda.usuario_id, usuario_vivienda.vivienda_id, id)
+            query = "UPDATE usuario_vivienda SET usuario_id = %s, vivienda_id = %s WHERE correo = %s"
+            values = (usuario_vivienda.usuario_id, usuario_vivienda.vivienda_id, correo)
             cursor.execute(query, values)
             self.db_connection.commit()
             return True
@@ -45,11 +48,12 @@ class UsuarioViviendaDAO(IDataAccessUsuarioViviendaDAO):
             print(f"Error al actualizar UsuarioVivienda: {e}")
             return False
 
-    def delete(self, id) -> bool:
+    def delete(self, correo: str) -> bool:
+        """Elimina un registro de UsuarioVivienda de la base de datos."""
         try:
             cursor = self.db_connection.cursor()
-            query = "DELETE FROM usuario_vivienda WHERE id = %s"
-            cursor.execute(query, (id,))
+            query = "DELETE FROM usuario_vivienda WHERE correo = %s"
+            cursor.execute(query, (correo,))
             self.db_connection.commit()
             return True
         except Exception as e:

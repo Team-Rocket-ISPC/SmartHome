@@ -44,7 +44,7 @@ class Dispositivo:
 
     
     def __str__(self):
-        return f"Dispositivo(nombre={self.nombre}, estado={self.estado}, fecha_hora={self.fecha_hora}, tipo={self.id_tipo}, ubicacion={self.id_ubicacion}, id_dispositivo={self.id_dispositivo})"
+        return f"Dispositivo: nombre={self.nombre}, estado={self.estado}, fecha_hora={self.fecha_hora}, tipo={self.id_tipo}, ubicacion={self.id_ubicacion}, id_dispositivo={self.id_dispositivo}"
 
     def encender_apagar(self):
         self.estado = not self.estado

@@ -116,9 +116,12 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 return False
             try:
                 cursor = conexion.cursor()
-                sql = "UPDATE usuario SET rol = %s WHERE correo = %s"
+                sql = "UPDATE usuario_vivienda SET rol = %s WHERE correo = %s"
                 valores = (nuevo_rol, correo)
-                cursor.execute(sql, valores)
+                res = cursor.execute(sql, valores)
+                if res == 0:
+                    print("[DAO] No se encontró el usuario para cambiar el rol.")
+                    return False
                 conexion.commit()
                 return True
             except Exception as e:

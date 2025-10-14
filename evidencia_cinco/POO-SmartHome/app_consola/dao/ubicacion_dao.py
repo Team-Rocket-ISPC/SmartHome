@@ -6,8 +6,10 @@ import mysql.connector
 from abc import ABC
 
 class UbicacionDAO(IDataAccessUbicacionDAO, ABC):
-
+    """Implementación de la interfaz de acceso a datos para la entidad Ubicación."""
+    
     def __connect_to_mysql(self):
+        """Establece la conexión a la base de datos MySQL."""
         db = DBConn()
         return db.connect()
 
@@ -53,7 +55,6 @@ class UbicacionDAO(IDataAccessUbicacionDAO, ABC):
             except mysql.connector.Error as e:
                 print(f"[DAO] Error al obtener ubicaciones: {e}")
                 return []
-    #agregar metodo get_by_vivienda
 
     def get_by_vivienda(self, id_vivienda: int) -> List[Ubicacion]:
         """Obtiene una lista de ubicaciones filtradas por id_vivienda."""

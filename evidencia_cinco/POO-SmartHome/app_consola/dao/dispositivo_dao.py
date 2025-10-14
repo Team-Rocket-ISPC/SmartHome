@@ -7,8 +7,9 @@ import mysql.connector  # Importar la librería para capturar errores específic
 
 
 class DispositivoDAO(IDataAccessDispositivoDAO):
-    # 🔹 Crear un nuevo dispositivo
+    """Clase para manejar operaciones CRUD de Dispositivo en MySQL."""
     def create(self, dispositivo: Dispositivo) -> bool:
+        """Crea un nuevo dispositivo en la base de datos."""
         with self.__connect_to_mysql() as conexion:
             if not conexion:
                 return False
@@ -35,9 +36,8 @@ class DispositivoDAO(IDataAccessDispositivoDAO):
                 conexion.rollback()
                 return False
 
-        # 🔹 Obtener todos los dispositivos
-        # 🔹 Obtener todos los dispositivos
     def get_all(self) -> List[Dispositivo]:
+        """Obtiene todos los dispositivos de la base de datos."""
         with self.__connect_to_mysql() as conexion:
             dispositivos = []
             try:
@@ -61,8 +61,8 @@ class DispositivoDAO(IDataAccessDispositivoDAO):
                 return []
 
 
-    # 🔹 Obtener un dispositivo por ID
     def get_by_id(self, id_dispositivo: int) -> Optional[Dispositivo]:
+        """Obtiene un dispositivo por su ID."""
         with self.__connect_to_mysql() as conexion:
             try:
                 cursor = conexion.cursor()
@@ -83,8 +83,8 @@ class DispositivoDAO(IDataAccessDispositivoDAO):
                 return None
 
 
-    # 🔹 Actualizar un dispositivo
     def update(self, dispositivo: Dispositivo) -> bool:
+        """Actualiza un dispositivo existente en la base de datos."""
         with self.__connect_to_mysql() as conexion:
             try:
                 cursor = conexion.cursor()
@@ -109,8 +109,9 @@ class DispositivoDAO(IDataAccessDispositivoDAO):
                 conexion.rollback()
                 return False
 
-    # Actualizar solo el estado del dispositivo (encender/apagar)
+
     def update_estado(self, id_dispositivo: int, nuevo_estado: bool) -> bool:
+        """Actualiza solo el estado de un dispositivo."""
         with self.__connect_to_mysql() as conexion:
             try:
                 cursor = conexion.cursor()
@@ -126,8 +127,9 @@ class DispositivoDAO(IDataAccessDispositivoDAO):
                 print(f"[DAO] Error al actualizar estado: {e}")
                 conexion.rollback()
                 return False
-    # 🔹 Eliminar un dispositivo
+
     def delete(self, id_dispositivo: int) -> bool:
+        """Elimina un dispositivo de la base de datos por su ID."""
         with self.__connect_to_mysql() as conexion:
             try:
                 cursor = conexion.cursor()
@@ -139,11 +141,8 @@ class DispositivoDAO(IDataAccessDispositivoDAO):
                 conexion.rollback()
                 return False
             
-    def __str__(self):
-        return f"Dispositivo(nombre={self.nombre}, estado={self.estado}, fecha_hora={self.fecha_hora}, tipo={self.id_tipo}, ubicacion={self.id_ubicacion}, id_dispositivo={self.id_dispositivo})"
 
-
-    # 🔹 Conectar con la base de datos
     def __connect_to_mysql(self):
+        """Establece la conexión a la base de datos MySQL."""
         db = DBConn()
         return db.connect()

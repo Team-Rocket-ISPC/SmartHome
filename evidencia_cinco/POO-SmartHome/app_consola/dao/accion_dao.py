@@ -2,10 +2,12 @@ from typing import List, Optional
 from conn.db_conn import DBConn
 from domain.entities.accion import Accion
 import mysql.connector  # Captura de errores específicos
+from interfaces.interface_accion_dao import IDataAccesAccionDAO
 
-class AccionDAO:
-    # 🔹 Crear una nueva acción
+class AccionDAO(IDataAccesAccionDAO):
+    """Implementación del DAO para la entidad Acción."""
     def create(self, accion: Accion) -> bool:
+        """Crea una nueva acción en la base de datos."""
         with self.__connect_to_mysql() as conexion:
             if not conexion:
                 return False
@@ -26,8 +28,8 @@ class AccionDAO:
                 conexion.rollback()
                 return False
 
-    # 🔹 Obtener todas las acciones
     def get_all(self) -> List[Accion]:
+        """Obtiene todas las acciones de la base de datos."""
         with self.__connect_to_mysql() as conexion:
             acciones = []
             try:
@@ -41,8 +43,9 @@ class AccionDAO:
                 print(f"[DAO] Error al obtener acciones: {e}")
                 return []
 
-    # 🔹 Obtener acciones por tipo de dispositivo
+
     def get_by_tipo(self, id_tipo: int) -> List[Accion]:
+        """Obtiene acciones de la base de datos por tipo."""
         with self.__connect_to_mysql() as conexion:
             acciones = []
             try:
@@ -56,8 +59,9 @@ class AccionDAO:
                 print(f"[DAO] Error al obtener acciones por tipo: {e}")
                 return []
 
-    # 🔹 Obtener una acción por ID
+
     def get_by_id(self, id_accion: int) -> Optional[Accion]:
+        """Obtiene una acción de la base de datos por su ID."""
         with self.__connect_to_mysql() as conexion:
             try:
                 cursor = conexion.cursor()
@@ -70,8 +74,8 @@ class AccionDAO:
                 print(f"[DAO] Error al obtener acción por ID: {e}")
                 return None
 
-    # 🔹 Actualizar una acción existente
     def update(self, accion: Accion) -> bool:
+        """Actualiza una acción existente en la base de datos."""
         with self.__connect_to_mysql() as conexion:
             try:
                 cursor = conexion.cursor()
@@ -88,8 +92,8 @@ class AccionDAO:
                 conexion.rollback()
                 return False
 
-    # 🔹 Eliminar una acción
     def delete(self, id_accion: int) -> bool:
+        """Elimina una acción de la base de datos por su ID."""
         with self.__connect_to_mysql() as conexion:
             try:
                 cursor = conexion.cursor()
@@ -101,9 +105,8 @@ class AccionDAO:
                 conexion.rollback()
                 return False
 
-    # 🔹 Conexión con la base de datos
     def __connect_to_mysql(self):
-# Conectar a una base de datos MySQL Server
+        """Establece una conexión con la base de datos MySQL."""
         db = DBConn()
         connection = db.connect()  
         return connection

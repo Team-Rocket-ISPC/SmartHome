@@ -2,9 +2,12 @@ from conn.db_conn import DBConn
 from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
 from domain.entities.tipo_dispositivo import TipoDispositivo
 from domain.entities.ubicacion import Ubicacion
+from dao.interfaces.interface_automatizacion_objetivo_dao import IDataAccessAutomatizacionObjetivoDAO
 
-class AutomatizacionObjetivoDAO:
+class AutomatizacionObjetivoDAO(IDataAccessAutomatizacionObjetivoDAO):
+    """DAO para gestionar los objetivos de las automatizaciones en la base de datos MySQL."""
     def create(self, objetivo: AutomatizacionObjetivo) -> bool:
+        """Agrega un nuevo objetivo a una automatización."""
         with self.__connect_to_mysql() as conn:
             if not conn:
                 return False
@@ -29,6 +32,7 @@ class AutomatizacionObjetivoDAO:
                 return False
    
     def get_all(self) -> list[AutomatizacionObjetivo]:
+        """Obtiene todos los objetivos de automatización."""
         with self.__connect_to_mysql() as conn:
            objetivos = []
            if not conn:
@@ -63,6 +67,7 @@ class AutomatizacionObjetivoDAO:
 
 
     def get(self, id_automatizacion: int) -> list[AutomatizacionObjetivo]:
+        """Obtiene todos los objetivos asociados a una automatización específica."""
         with self.__connect_to_mysql() as conn:
            objetivos = []
            if not conn:
@@ -97,6 +102,7 @@ class AutomatizacionObjetivoDAO:
 
 
     def delete(self, id_automatizacion: int, id_tipo: int, id_ubicacion: int) -> bool:
+        """Elimina un objetivo de una automatización."""
         with self.__connect_to_mysql() as conn:
             if not conn:
                 return False
@@ -117,7 +123,7 @@ class AutomatizacionObjetivoDAO:
     
 
     def __connect_to_mysql(self):
-# Conectar a una base de datos MySQL Server
+        """Establece una conexión con la base de datos MySQL."""
         db = DBConn()
         connection = db.connect()  
         return connection

@@ -28,3 +28,8 @@ class IDataAccessUbicacionDAO(ABC):
     def delete(self, id_ubicacion: int) -> bool:
         """Elimina una ubicación de la base de datos."""
         pass
+
+    @abstractmethod
+    def get_by_vivienda(self, id_vivienda: int) -> List[Ubicacion]:
+        """Obtiene una lista de ubicaciones filtradas por id_vivienda."""
+        pass

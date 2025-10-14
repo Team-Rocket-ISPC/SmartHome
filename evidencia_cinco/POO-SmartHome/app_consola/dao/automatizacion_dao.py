@@ -4,10 +4,12 @@ from domain.entities.automatizacion_objetivo import AutomatizacionObjetivo
 from domain.entities.tipo_dispositivo import TipoDispositivo
 from domain.entities.ubicacion import Ubicacion
 from dao.automatizacion_objetivo_dao import AutomatizacionObjetivoDAO
+from dao.interfaces.interface_automatizacion_dao import IDataAccessAutomatizacionDAO
 
-class AutomatizacionDAO:
-
+class AutomatizacionDAO(IDataAccessAutomatizacionDAO):
+    """Implementación del DAO para la entidad Automatización."""
     def create(self, automatizacion: Automatizacion) -> bool:
+        """Crea una nueva automatización en la base de datos junto con sus objetivos."""
         with self.__connect_to_mysql() as conn:
             if not conn:
                 return False
@@ -57,6 +59,7 @@ class AutomatizacionDAO:
                 return False
        
     def get(self, id_automatizacion: int) -> Automatizacion | None:
+        """Obtiene una automatización por su ID."""
         with self.__connect_to_mysql() as conn:
             if not conn:
                 return None
@@ -92,6 +95,7 @@ class AutomatizacionDAO:
    
 
     def get_all(self, id_vivienda: int = None) -> list[Automatizacion]:
+        """Obtiene todas las automatizaciones, opcionalmente filtradas por ID de vivienda."""
         automatizaciones = []
         with self.__connect_to_mysql() as conn:
             if not conn:
@@ -141,6 +145,7 @@ class AutomatizacionDAO:
            
             
     def update(self, automatizacion: Automatizacion) -> bool:
+        """Actualiza los datos de una automatización existente."""
         with self.__connect_to_mysql() as conn:
             if not conn:
                 return False
@@ -188,6 +193,7 @@ class AutomatizacionDAO:
                 return []
 
     def delete(self, id_automatizacion: int) -> bool:
+        """Elimina una automatización por su ID."""
         with self.__connect_to_mysql() as conn:
             if not conn:
                 return False
@@ -210,7 +216,7 @@ class AutomatizacionDAO:
                 return False
 
     def __connect_to_mysql(self):
-# Conectar a una base de datos MySQL Server
+        """Establece una conexión con la base de datos MySQL."""
         db = DBConn()
         connection = db.connect()  
         return connection

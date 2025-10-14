@@ -7,11 +7,11 @@ class IDataAccessUsuarioViviendaDAO(ABC):
     def create(self, usuario_vivienda : UsuarioVivienda) -> bool:
         pass
     @abstractmethod
-    def get(self, id) -> UsuarioVivienda:
+    def get(self, correo: str) -> UsuarioVivienda:
         pass
     @abstractmethod
-    def update(self, id, usuario_vivienda : UsuarioVivienda) -> bool:
+    def update(self, correo: str, usuario_vivienda: UsuarioVivienda) -> bool:
         pass
     @abstractmethod
-    def delete(self, id) -> bool:
+    def delete(self, correo: str) -> bool:
         pass
