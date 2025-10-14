@@ -34,7 +34,7 @@ def test_hora_inicio_valida():
 
 def test_hora_inicio_invalida_formato():
     with pytest.raises(ValueError):
-        Automatizacion("Luces", 1, "8:30", "23:59")
+        Automatizacion("Luces", 1, "8-30", "23:59")
 
 
 def test_hora_inicio_invalida_fuera_rango():

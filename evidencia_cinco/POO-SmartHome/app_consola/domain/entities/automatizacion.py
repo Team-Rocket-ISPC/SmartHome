@@ -17,7 +17,7 @@ class Automatizacion:
     
     @property
     def nombre(self):
-        return self._nombres
+        return self._nombre
 
     @nombre.setter
     def nombre(self, value):
