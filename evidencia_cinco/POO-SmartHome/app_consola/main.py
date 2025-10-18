@@ -44,7 +44,7 @@ def registrar_usuario(usuario_dao):
     apellidos = input("Apellido/s: ")
     contrasena = input("Contraseña: ")
 
-    usuario = Usuario(correo, nombres, apellidos, contrasena)
+    usuario = Usuario(correo, nombres, apellidos, contrasena, es_activo=True)
     if usuario_dao.create(usuario):
         print("Usuario registrado correctamente (rol: Estándar por defecto)")
     else:

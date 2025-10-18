@@ -14,7 +14,7 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 return None
             try:
                 cursor = conexion.cursor()
-                cursor.execute("SELECT * FROM usuario WHERE correo = %s AND contrasena = %s", (correo, contrasena))
+                cursor.execute("SELECT correo, nombres, apellidos, contrasena FROM usuario WHERE correo = %s AND contrasena = %s", (correo, contrasena))
                 fila = cursor.fetchone()        
                 if fila:
                     return Usuario(fila[0], fila[1], fila[2], fila[3])
@@ -62,8 +62,8 @@ class UsuarioDAO(IDataAccessUsuarioDAO):
                 return False
             try:
                 cursor = conexion.cursor()
-                sql = "INSERT INTO usuario (correo, nombres, apellidos, contrasena) VALUES (%s, %s, %s, %s)"
-                valores = (usuario.correo, usuario.nombres, usuario.apellidos, usuario.contrasena)
+                sql = "INSERT INTO usuario (correo, nombres, apellidos, contrasena, es_activo) VALUES (%s, %s, %s, %s, %s)"
+                valores = (usuario.correo, usuario.nombres, usuario.apellidos, usuario.contrasena, usuario.es_activo)
                 cursor.execute(sql, valores)
                 conexion.commit()
                 return True

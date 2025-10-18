@@ -1,13 +1,13 @@
 class Usuario:
-    def __init__(self, correo: str, nombres: str, apellidos: str, contrasena: str):
+    def __init__(self, correo: str, nombres: str, apellidos: str, contrasena: str, es_activo: bool = True):
         self.correo = correo
         self.nombres = nombres 
         self.apellidos = apellidos
         self.contrasena = contrasena
-
+        self.es_activo = es_activo
 
     def __str__(self):
-        return f"Usuario(correo={self.correo}, nombres={self.nombres}, apellidos={self.apellidos})"
+        return f"Usuario: correo= {self.correo}, nombres= {self.nombres}, apellidos= {self.apellidos}, es_activo= {self.es_activo})"
 
     @property
     def correo(self):
@@ -48,3 +48,11 @@ class Usuario:
         if not value or len(value) < 4:
             raise ValueError("La contraseña debe tener al menos 4 caracteres")
         self._contrasena = value
+
+    @property
+    def es_activo(self):
+        return self._es_activo
+
+    @es_activo.setter
+    def es_activo(self, value):
+        self._es_activo = value
